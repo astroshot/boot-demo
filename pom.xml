@@ -93,7 +93,7 @@
                         <goals>
                             <goal>generate</goal>
                         </goals>
-                        <phase>package</phase>
+                        <phase>generate</phase>
                         <configuration>
                             <!--允许移动生成的文件-->
                             <verbose>true</verbose>
