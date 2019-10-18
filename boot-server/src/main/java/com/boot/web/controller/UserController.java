@@ -1,8 +1,9 @@
 package com.boot.web.controller;
 
+import com.boot.common.model.JSONResult;
+import com.boot.common.web.controller.BaseController;
 import com.boot.dao.model.User;
 import com.boot.dao.service.UserService;
-import com.boot.common.model.JSONResult;
 import com.boot.dao.service.model.UserQueryBO;
 import com.boot.web.model.UserQueryVO;
 import com.boot.web.model.UserVO;
@@ -17,7 +18,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-public class UserController {
+public class UserController extends BaseController {
 
     @Resource
     private UserService userService;
