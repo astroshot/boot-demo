@@ -1,5 +1,6 @@
 package com.boot.dao.service;
 
+import com.boot.common.model.Pager;
 import com.boot.dao.model.User;
 import com.boot.dao.service.model.UserBO;
 import com.boot.dao.service.model.UserQueryBO;
@@ -10,7 +11,7 @@ public interface UserService {
 
     void saveOrUpdate(User user);
 
-    List<User> getBy(UserQueryBO condition);
+    Pager<User> getBy(UserQueryBO condition);
 
     boolean saveAll(List<UserBO> users);
 

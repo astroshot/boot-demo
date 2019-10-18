@@ -10,7 +10,19 @@
     <!--指定特定数据库的jdbc驱动jar包的位置-->
 <!--    <classPathEntry location="E:/idea_workspace/mumall/mysql-connector-java-5.1.6-bin.jar"/>-->
 
-    <context id="default" targetRuntime="MyBatis3">
+    <context id="boot-mybatis-generator" targetRuntime="MyBatis3">
+
+        <property name="suppressTypeWarnings" value="true" />
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <property name="javaFormatter" value="org.mybatis.generator.api.dom.DefaultJavaFormatter"/>
+        <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <plugin type="com.boot.mybatis.generator.plugin.MapperPlugin"/>
+        <plugin type="com.boot.mybatis.generator.plugin.PagerPlugin"/>
+
         <!-- optional，旨在创建class时，对注释进行控制 -->
         <commentGenerator>
             <property name="suppressDate" value="true"/>
@@ -34,7 +46,7 @@
             targetPackage     指定生成的model生成所在的包名
             targetProject     指定在该项目下所在的路径
         -->
-        <javaModelGenerator targetPackage="com.boot.dao.model" targetProject="./src/main/java">
+        <javaModelGenerator targetPackage="com.boot.dao.model" targetProject="../boot-dao/src/main/java">
             <!-- 是否允许子包，即targetPackage.schemaName.tableName -->
             <property name="enableSubPackages" value="false"/>
             <!-- 是否对model添加 构造函数 -->
@@ -46,7 +58,7 @@
         </javaModelGenerator>
 
         <!--mapper映射文件生成所在的目录 为每一个数据库的表生成对应的SqlMap文件 -->
-        <sqlMapGenerator targetPackage="mappers" targetProject="./src/main/resources">
+        <sqlMapGenerator targetPackage="mappers" targetProject="../boot-dao/src/main/resources">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
@@ -57,7 +69,7 @@
         -->
 
         <!-- targetPackage：mapper 接口 dao 生成的位置 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.boot.dao.mapper" targetProject="./src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.boot.dao.mapper" targetProject="../boot-dao/src/main/java">
             <!-- enableSubPackages:是否让 schema 作为包的后缀 -->
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>

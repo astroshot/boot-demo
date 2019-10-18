@@ -39,22 +39,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getBy(UserQueryBO condition) {
+    public Pager<User> getBy(UserQueryBO condition) {
         Assert.notNull(condition, "condition 不能为 null");
+
         Pager<User> pager = new Pager<>();
         UserExample userExample = new UserExample();
         UserExample.Criteria criteria = userExample.createCriteria();
         if (condition.getName() != null) {
-            criteria.andNameLike(condition.getName());
+            criteria.andNameLike(condition.getName() + "%");
         }
 
         if (condition.getEmail() != null) {
-            criteria.andEmailLike(condition.getEmail());
+            criteria.andEmailLike(condition.getEmail() + "%");
+        }
+
+        if (condition.getPageNo() != null && condition.getPageSize() != null) {
+            int offset = (condition.getPageNo() - 1) * condition.getPageSize();
+            userExample.setOffset(offset);
+            userExample.setLimit(condition.getPageSize());
         }
 
         userExample.setOrderByClause("id desc");
 
-        return userMapper.selectByExample(userExample);
+        List<User> users = userMapper.selectByExample(userExample);
+        int total = userMapper.countByExample(userExample);
+
+        pager.setData(users);
+        pager.setPageNo(condition.getPageNo());
+        pager.setPageSize(condition.getPageSize());
+        pager.setTotalCount(total);
+
+        return pager;
     }
 
     @Override

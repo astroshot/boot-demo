@@ -10,6 +10,9 @@ server:
     config: classpath*:logback.xml
   servlet:
     context-path: /myboot
+    session:
+      cookie:
+        name: BOOT-SESSIONID  # replace JSESSIONID
 
 spring:
   datasource:

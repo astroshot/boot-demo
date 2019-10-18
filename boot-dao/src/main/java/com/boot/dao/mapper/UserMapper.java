@@ -2,13 +2,11 @@ package com.boot.dao.mapper;
 
 import com.boot.dao.model.User;
 import com.boot.dao.model.UserExample;
-
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {
-    long countByExample(UserExample example);
+    int countByExample(UserExample example);
 
     int deleteByExample(UserExample example);
 
@@ -29,4 +27,8 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+    public static final String COLUMNS = "id, name, email, phone, status, created_at, updated_at";
+
+    public static final String TABLE_NAME = "user";
 }
