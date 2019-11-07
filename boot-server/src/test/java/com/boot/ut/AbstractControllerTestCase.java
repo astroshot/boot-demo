@@ -28,7 +28,7 @@ public abstract class AbstractControllerTestCase extends AbstractTransactionalJU
 
     @Before
     public void mockMvc() {
-        // 构造MockMvc
+        // 构造 MockMvc
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
     }
 
