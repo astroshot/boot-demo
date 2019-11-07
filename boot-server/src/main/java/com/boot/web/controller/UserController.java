@@ -1,6 +1,7 @@
 package com.boot.web.controller;
 
 import com.boot.common.model.JSONResult;
+import com.boot.common.model.Pager;
 import com.boot.common.web.controller.BaseController;
 import com.boot.dao.model.User;
 import com.boot.dao.service.UserService;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 public class UserController extends BaseController {
@@ -38,15 +38,18 @@ public class UserController extends BaseController {
 
     @GetMapping(value = "/users")
     public JSONResult<?> getUsers(@Valid UserQueryVO param) {
-        // TODO: page is not supported yet
-        // if (param.getPageNo() < 1 || param.getPageSize() < 1) {
-        //     return JSONResult.error("pageNo and pageSize should be positive!");
-        // }
+
+        if (param.getPageNo() < 1 || param.getPageSize() < 1) {
+            return JSONResult.error("pageNo and pageSize should be positive!");
+        }
 
         UserQueryBO condition = new UserQueryBO();
         condition.setName(param.getName());
         condition.setEmail(param.getEmail());
-        List<User> users = userService.getBy(condition);
+        condition.setPageNo(param.getPageNo());
+        condition.setPageSize(param.getPageSize());
+
+        Pager<User> users = userService.getBy(condition);
         return JSONResult.success(users);
     }
 }

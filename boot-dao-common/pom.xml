@@ -7,11 +7,9 @@
     <groupId>boot-dao-common</groupId>
     <artifactId>boot-dao-common</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>war</packaging>
 
-    <name>boot-dao-common Maven Webapp</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
+    <name>boot-dao-common</name>
+    <packaging>jar</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -44,6 +42,18 @@
             <artifactId>lombok</artifactId>
             <version>1.18.4</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.5.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.28</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

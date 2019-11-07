@@ -8,6 +8,9 @@
     <artifactId>boot-common</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <name>boot-common</name>
+    <packaging>jar</packaging>
+
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <dependency>
