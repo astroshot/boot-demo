@@ -1,5 +1,6 @@
 package com.boot.common.helper;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 
@@ -38,7 +39,7 @@ public abstract class EncryptHelper {
         try {
             MessageDigest md = MessageDigest.getInstance(KEY_MD5);
             // encryption
-            byte[] b = md.digest(sourceString.getBytes("UTF-8"));
+            byte[] b = md.digest(sourceString.getBytes(StandardCharsets.UTF_8));
             resultString = byte2hexString(b);
         } catch (Exception ex) {
         }
@@ -75,7 +76,7 @@ public abstract class EncryptHelper {
         try {
             MessageDigest md = MessageDigest.getInstance(KEY_SHA);
             // encryption
-            byte[] b = md.digest(sourceString.getBytes("UTF-8"));
+            byte[] b = md.digest(sourceString.getBytes(StandardCharsets.UTF_8));
             resultString = byte2hexString(b);
         } catch (Exception ex) {
         }
