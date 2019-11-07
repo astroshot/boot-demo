@@ -8,11 +8,11 @@
     <!--导入属性配置-->
     <properties resource="datasource.properties"></properties>
     <!--指定特定数据库的jdbc驱动jar包的位置-->
-<!--    <classPathEntry location="E:/idea_workspace/mumall/mysql-connector-java-5.1.6-bin.jar"/>-->
+    <!--<classPathEntry location="E:/idea_workspace/mumall/mysql-connector-java-5.1.6-bin.jar"/>-->
 
     <context id="boot-mybatis-generator" targetRuntime="MyBatis3">
 
-        <property name="suppressTypeWarnings" value="true" />
+        <property name="suppressTypeWarnings" value="true"/>
         <property name="autoDelimitKeywords" value="true"/>
         <property name="javaFileEncoding" value="UTF-8"/>
         <property name="javaFormatter" value="org.mybatis.generator.api.dom.DefaultJavaFormatter"/>
@@ -69,11 +69,13 @@
         -->
 
         <!-- targetPackage：mapper 接口 dao 生成的位置 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.boot.dao.mapper" targetProject="../boot-dao/src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.boot.dao.mapper"
+                             targetProject="../boot-dao/src/main/java">
             <!-- enableSubPackages:是否让 schema 作为包的后缀 -->
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
+        <!-- add your table here -->
         <table tableName="user" domainObjectName="User"></table>
 
     </context>
