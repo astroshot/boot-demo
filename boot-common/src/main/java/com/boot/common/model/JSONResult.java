@@ -1,13 +1,13 @@
 package com.boot.common.model;
 
-import java.io.Serializable;
-
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
 
 /**
  * Controller 层返回结果 JSON 序列化的工具类
@@ -27,9 +27,9 @@ public class JSONResult<T> implements Serializable {
 
     public static final int ERROR = -1;
 
-    int code;
-    T data;
-    String msg;
+    private int code;
+    private T data;
+    private String msg;
 
     public JSONResult() {
     }
@@ -65,7 +65,7 @@ public class JSONResult<T> implements Serializable {
     }
 
     public static <T> JSONResult<T> success(T data) {
-        JSONResult<T> res = new JSONResult<>(JSONResult.SUCCESS, data, "Operation Success!");
+        JSONResult<T> res = new JSONResult<>(JSONResult.SUCCESS, data, "Success!");
         if (LOGGER.isDebugEnabled()) {
             String logString = res.toString();
             if (logString.length() > DEFAULT_MAX_LOG_LENGTH) {
