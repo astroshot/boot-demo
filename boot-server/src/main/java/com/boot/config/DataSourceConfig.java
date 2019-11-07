@@ -1,11 +1,9 @@
 package com.boot.config;
 
-import com.boot.dao.common.interceptor.MybatisShowSqlInterceptor;
+import com.boot.common.dao.interceptor.MybatisShowSqlInterceptor;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;

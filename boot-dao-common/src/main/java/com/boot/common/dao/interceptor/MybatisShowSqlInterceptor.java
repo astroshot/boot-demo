@@ -1,4 +1,4 @@
-package com.boot.dao.common.interceptor;
+package com.boot.common.dao.interceptor;
 
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;

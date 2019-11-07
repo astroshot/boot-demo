@@ -1,4 +1,4 @@
-package com.boot.dao.common.model;
+package com.boot.common.dao.model;
 
 import java.io.Serializable;
 import java.util.Date;
