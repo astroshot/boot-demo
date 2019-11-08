@@ -11,5 +11,7 @@ public class TestRegExpHelper extends AbstractTestCase {
     public void testMatch() {
         Assert.assertTrue(RegExpHelper.match("[0-9]", "4"));
         Assert.assertFalse(RegExpHelper.match("[0-9]", "o"));
+        Assert.assertTrue(RegExpHelper.match(
+                "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+\\.[a-zA-Z0-9_-]+$", "example@163.com"));
     }
 }

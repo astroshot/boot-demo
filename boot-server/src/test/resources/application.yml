@@ -9,14 +9,12 @@ server:
   logging:
     config: classpath*:logback.xml
   servlet:
-    context-path: /myboot
+    context-path: /boot-demo
+    session:
+      cookie:
+        name: BOOT-SESSIONID  # replace JSESSIONID
 
 spring:
-  http:
-    encoding:
-      force: true
-      charset: UTF-8
-      enabled: true
   datasource:
     name: test
     url: jdbc:mysql://localhost:3306/test?characterEncoding=utf-8

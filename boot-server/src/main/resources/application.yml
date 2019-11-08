@@ -9,7 +9,7 @@ server:
   logging:
     config: classpath*:logback.xml
   servlet:
-    context-path: /myboot
+    context-path: /boot-demo
     session:
       cookie:
         name: BOOT-SESSIONID  # replace JSESSIONID
