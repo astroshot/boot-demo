@@ -1,21 +1,15 @@
 package com.boot.common.dao.model;
 
-import java.io.Serializable;
-import java.util.Date;
-
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import java.io.Serializable;
 
 public class BaseModel implements Serializable {
 
-    private Long id;
-
-    private Date createdAt;
-
-    private Date updatedAt;
+    protected Long id;
 
     public Long getId() {
         return id;
@@ -23,22 +17,6 @@ public class BaseModel implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public boolean equals(Object other) {
@@ -53,6 +31,7 @@ public class BaseModel implements Serializable {
         }
         return this.id.equals(((BaseModel) other).getId());
     }
+
     public int hashCode() {
         return id == null ? System.identityHashCode(this) : id.hashCode();
     }

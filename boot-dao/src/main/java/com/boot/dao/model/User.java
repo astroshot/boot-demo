@@ -1,10 +1,9 @@
 package com.boot.dao.model;
 
+import com.boot.common.dao.model.BaseModel;
 import java.util.Date;
 
-public class User {
-    private Long id;
-
+public class User extends BaseModel {
     private String name;
 
     private String email;
@@ -29,14 +28,6 @@ public class User {
 
     public User() {
         super();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

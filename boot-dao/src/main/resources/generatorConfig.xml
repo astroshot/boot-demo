@@ -6,7 +6,7 @@
 
 <generatorConfiguration>
     <!--导入属性配置-->
-    <properties resource="datasource.properties"></properties>
+    <properties resource="datasource.properties"/>
     <!--指定特定数据库的jdbc驱动jar包的位置-->
     <!--<classPathEntry location="E:/idea_workspace/mumall/mysql-connector-java-5.1.6-bin.jar"/>-->
 
@@ -22,7 +22,10 @@
 
         <plugin type="com.boot.mybatis.generator.plugin.MapperPlugin"/>
         <plugin type="com.boot.mybatis.generator.plugin.PagerPlugin"/>
-
+        <plugin type="com.boot.mybatis.generator.plugin.SuperClassPlugin">
+            <property name="addSuperClass" value="true" />
+            <property name="superClass" value="com.boot.common.dao.model.BaseModel" />
+        </plugin>
         <!-- optional，旨在创建class时，对注释进行控制 -->
         <commentGenerator>
             <property name="suppressDate" value="true"/>
