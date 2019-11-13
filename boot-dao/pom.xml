@@ -24,8 +24,8 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>boot-dao-common</groupId>
-            <artifactId>boot-dao-common</artifactId>
+            <groupId>boot-common-dao</groupId>
+            <artifactId>boot-common-dao</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -44,6 +44,12 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>5.1.10.RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.4.6</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

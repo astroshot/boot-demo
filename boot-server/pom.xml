@@ -51,8 +51,8 @@
         </dependency>
 
         <dependency>
-            <groupId>boot-web-common</groupId>
-            <artifactId>boot-web-common</artifactId>
+            <groupId>boot-common-web</groupId>
+            <artifactId>boot-common-web</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
