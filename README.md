@@ -1,6 +1,6 @@
-# boot-everything
+# boot-demo
 
-A structured Spring boot project demo.
+A Java web server demo based on Spring boot.
 
 ## Requirements
 
@@ -16,8 +16,9 @@ Idea is recommended to open this project.
 | module | introduction |
 |---|---|
 | boot-common | contains common component code for the entire project |
-| boot-dao-common | common component code for DAO |
-| boot-web-common | common component code for web server |
+| boot-common-dao | common component code for DAO |
+| boot-common-rpc | common component code for rpc invocation based on HTTP |
+| boot-common-web | common component code for web server |
 | boot-dao | DAO service code |
 | boot-server | HTTP server using Spring boot |
 | boot-mybatis-generator | custom mybatis mapper generator |

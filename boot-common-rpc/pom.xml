@@ -32,6 +32,22 @@
             <artifactId>guava</artifactId>
             <version>27.1-jre</version>
         </dependency>
+        <dependency>
+            <groupId>boot-common</groupId>
+            <artifactId>boot-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.9.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.8</version>
+        </dependency>
     </dependencies>
 
     <build>
