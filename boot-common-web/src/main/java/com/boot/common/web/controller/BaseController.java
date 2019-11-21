@@ -18,7 +18,7 @@ public class BaseController {
      * @param binder default param
      */
     @InitBinder
-    public void initBinder(WebDataBinder binder) {
+    protected void initBinder(WebDataBinder binder) {
         binder.setAutoGrowCollectionLimit(10000);
     }
 
