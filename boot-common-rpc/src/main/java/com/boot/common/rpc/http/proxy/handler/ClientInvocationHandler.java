@@ -1,10 +1,12 @@
 package com.boot.common.rpc.http.proxy.handler;
 
 import com.boot.common.constant.CommonConstant;
+import com.boot.common.helper.HTTPHelper;
 import com.boot.common.rpc.http.annotation.HTTPRequest;
 import com.boot.common.rpc.http.annotation.PathParam;
-import com.boot.common.rpc.http.annotation.RequestHeader;
 import com.boot.common.rpc.http.annotation.RequestBody;
+import com.boot.common.rpc.http.annotation.RequestHeader;
+import com.boot.common.rpc.http.annotation.RequestParam;
 import com.boot.common.rpc.http.constant.RequestMethod;
 import com.boot.common.rpc.model.BaseDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -22,12 +24,12 @@ import java.lang.reflect.Parameter;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 
 /**
  * RPC invocation based on HTTP.
- * TODO: to be finished
  */
 public class ClientInvocationHandler extends AbstractInvocationHandler {
 
@@ -126,7 +128,7 @@ public class ClientInvocationHandler extends AbstractInvocationHandler {
         RequestMethod requestMethod = request.method();
 
         if (parameters == null || parameters.length < 1) {
-            return paramMap;
+            return null;
         }
 
         if (requestMethod == RequestMethod.GET || requestMethod == RequestMethod.POST_FORM) {
@@ -143,11 +145,118 @@ public class ClientInvocationHandler extends AbstractInvocationHandler {
                 }
 
                 if (args[i] instanceof Collection) {
+                    RequestParam reqParam = p.getAnnotation(RequestParam.class);
+                    if (reqParam == null || reqParam.inHeader()) {
+                        continue;
+                    }
 
+                    Collection c = (Collection) args[i];
+
+                    Iterator iter = c.iterator();
+                    while (iter.hasNext()) {
+                        Object obj = iter.next();
+                        if (obj instanceof BaseDTO) {
+                            paramMap.putAll(convertToMap((BaseDTO) obj));
+                        } else {
+                            String key = reqParam.value();
+                            String val = convertValue(obj);
+                            if (paramMap.containsKey(key)) {
+                                paramMap.put(key, paramMap.get(key) + "," + val);
+                            } else {
+                                paramMap.put(key, val);
+                            }
+                        }
+                    }
+                } else if (args[i] instanceof BaseDTO) {
+                    paramMap.putAll(convertToMap((BaseDTO) args[i]));
+                } else if (args[i] instanceof String || isWrapClass(args[i].getClass())) {
+                    RequestParam reqParam = p.getAnnotation(RequestParam.class);
+                    if (reqParam == null || reqParam.inHeader()) {
+                        continue;
+                    }
+
+                    String val = args[i] == null ? "" : (args[i] + "");
+                    paramMap.put(reqParam.value(), val);
+                } else {
+                    throw new IllegalArgumentException("Unsupported param type: " + args[i].getClass());
                 }
             }
         }
-        return null;
+        return args[0];
+    }
+
+    protected Map<String, String> getHeader(Method method, Object[] args) throws Throwable {
+        Map<String, String> header = new HashMap<>();
+
+        RequestHeader[] requestHeaders = method.getDeclaringClass().getAnnotationsByType(RequestHeader.class);
+        if (requestHeaders != null || requestHeaders.length > 0) {
+            for (RequestHeader item : requestHeaders) {
+                header.put(item.key(), item.value());
+            }
+        }
+
+        requestHeaders = method.getAnnotationsByType(RequestHeader.class);
+        if (requestHeaders != null || requestHeaders.length > 0) {
+            for (RequestHeader item : requestHeaders) {
+                header.put(item.key(), item.value());
+            }
+        }
+
+        Parameter[] parameters = method.getParameters();
+        if (parameters == null || parameters.length < 1) {
+            return header;
+        }
+
+        for (int i = 0; i < parameters.length; i++) {
+            Parameter p = parameters[i];
+            Object arg = args[i];
+            if (p == null || arg == null) {
+                continue;
+            }
+
+            RequestBody requestBody = p.getAnnotation(RequestBody.class);
+            if (requestBody != null) {
+                if (!requestBody.header()) {
+                    continue;
+                }
+                header.putAll(convertToMap((BaseDTO) args[0]));
+            } else if ((arg instanceof String || isWrapClass(arg.getClass()))) {
+                RequestParam requestParam = p.getAnnotation(RequestParam.class);
+                if (requestParam != null && requestParam.inHeader()) {
+                    String val = arg + "";
+                    header.put(requestParam.value(), val);
+                }
+            } else {
+                throw new IllegalArgumentException("Unsupported param type: " + args[i].getClass());
+            }
+        }
+
+        return header;
+    }
+
+    protected String doRequest(RequestMethod requestMethod, String requestUrl, Map<String, String> header, Object param) {
+
+        String response = "";
+        long start = System.currentTimeMillis();
+        try {
+            if (RequestMethod.GET == requestMethod) {
+                response = HTTPHelper.get(requestUrl, header, (Map<String, String>) param, null);
+            } else if (RequestMethod.POST_FORM == requestMethod) {
+                response = HTTPHelper.postForm(requestUrl, header, (Map<String, String>) param, null);
+            } else if (RequestMethod.POST_JSON == requestMethod) {
+                response = HTTPHelper.postJson(requestUrl, header, param, null);
+            } else {
+                logger.error("Unsupported method: {}", requestMethod);
+                throw new RuntimeException("Un");
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            long end = System.currentTimeMillis();
+            logger.info("RPC invocation: url: {}, method: {}, header: {}, pars: {}, result: {}, cost: {}ms", requestUrl,
+                    requestMethod.name(), toJsonString(header), toJsonString(param), response, end - start);
+        }
+        return response;
     }
 
     @Override
@@ -162,6 +271,8 @@ public class ClientInvocationHandler extends AbstractInvocationHandler {
 
         String url = getRequestUrl(method, args, request);
         RequestMethod requestMethod = request.method();
+        Object param = getParameters(method, args);
+        Map<String, String> header = getHeader(method, args);
         return null;
     }
 
@@ -172,7 +283,7 @@ public class ClientInvocationHandler extends AbstractInvocationHandler {
             Map<String, String> res = new HashMap<>();
             map.forEach((k, v) -> res.put(k, convertValue(v)));
             return res;
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
         return new HashMap<>();
@@ -184,8 +295,17 @@ public class ClientInvocationHandler extends AbstractInvocationHandler {
         } else if (obj instanceof String || isWrapClass(obj.getClass())) {
             return obj + "";
         } else {
-            throw new IllegalArgumentException("参数类型只支持八种基本数据类型以及对应的包装类、String、null");
+            throw new IllegalArgumentException("Only basic type and wrap class, String, null are supported");
         }
+    }
+
+    protected String toJsonString(Object obj) {
+        try {
+            return OBJECT_MAPPER.writeValueAsString(obj);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+        return "";
     }
 
 }
