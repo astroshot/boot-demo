@@ -79,7 +79,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from user
+    from `user`
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -98,15 +98,15 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from user
+    from `user`
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from user
+    delete from `user`
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.boot.dao.model.UserExample" >
-    delete from user
+    delete from `user`
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -115,19 +115,22 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.boot.dao.model.User" >
-    insert into user (id, `name`, email, 
-      phone, `status`, created_at, 
-      updated_at)
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
-      #{phone,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{createdAt,jdbcType=TIMESTAMP}, 
-      #{updatedAt,jdbcType=TIMESTAMP})
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into `user` (`name`, email, phone, 
+      `status`, created_at, updated_at
+      )
+    values (#{name,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.boot.dao.model.User" >
-    insert into user
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into `user`
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
       <if test="name != null" >
         `name`,
       </if>
@@ -148,9 +151,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
-      </if>
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
       </if>
@@ -172,13 +172,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.boot.dao.model.UserExample" resultType="java.lang.Integer" >
-    select count(*) from user
+    select count(*) from `user`
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update user
+    update `user`
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=BIGINT},
@@ -210,7 +210,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update user
+    update `user`
     set id = #{record.id,jdbcType=BIGINT},
       `name` = #{record.name,jdbcType=VARCHAR},
       email = #{record.email,jdbcType=VARCHAR},
@@ -226,7 +226,7 @@
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.boot.dao.model.User" >
-    update user
+    update `user`
     <set >
       <if test="name != null" >
         `name` = #{name,jdbcType=VARCHAR},
@@ -250,7 +250,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.boot.dao.model.User" >
-    update user
+    update `user`
     set `name` = #{name,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},

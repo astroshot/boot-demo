@@ -79,7 +79,10 @@
         </javaClientGenerator>
 
         <!-- add your table here -->
-        <table tableName="user" domainObjectName="User"></table>
+        <!--delimitIdentifiers=true 给表名加反引号-->
+        <table tableName="user" domainObjectName="User" delimitIdentifiers="true">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
 
     </context>
 </generatorConfiguration>
