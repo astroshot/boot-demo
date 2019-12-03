@@ -19,13 +19,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 
 /**
@@ -247,7 +251,7 @@ public class ClientInvocationHandler extends AbstractInvocationHandler {
                 response = HTTPHelper.postJson(requestUrl, header, param, null);
             } else {
                 logger.error("Unsupported method: {}", requestMethod);
-                throw new RuntimeException("Un");
+                throw new RuntimeException("Unsupported method");
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -269,12 +273,45 @@ public class ClientInvocationHandler extends AbstractInvocationHandler {
             throw new IllegalArgumentException("URL should be configured.");
         }
 
+        if (!("void".equals(returnType.getName())
+                || returnType.equals(Future.class)
+                || Future.class.isAssignableFrom(returnType))) {
+            throw new IllegalArgumentException("不支持的返回值");
+        }
+
+
         String url = getRequestUrl(method, args, request);
         RequestMethod requestMethod = request.method();
         Object param = getParameters(method, args);
         Map<String, String> header = getHeader(method, args);
-        return null;
+        String responseStr = doRequest(requestMethod, url, header, param);
+        return convert(responseStr, method);
     }
+
+    protected <T> T convert(String responseStr, Method method) throws IOException {
+        if ("void".equals(method.getReturnType().getName())) {
+            return null;
+        } else if (String.class.equals(method.getReturnType())) {
+            return (T) convert(responseStr, String.class);
+        } else if (method.getGenericReturnType() instanceof ParameterizedType) {
+            return (T) convert(responseStr, method.getGenericReturnType());
+        } else {
+            return (T) convert(responseStr, method.getReturnType());
+        }
+    }
+
+    protected <T> T convert(String responseStr, Type type) throws IOException {
+        return OBJECT_MAPPER.readValue(responseStr, TYPE_FACTORY.constructType(type));
+    }
+
+    protected <T> T convert(String responseStr, Class<T> clazz) throws IOException {
+        if (String.class.equals(clazz)) {
+            return (T) responseStr;
+        } else {
+            return OBJECT_MAPPER.readValue(responseStr, clazz);
+        }
+    }
+
 
     protected Map<String, String> convertToMap(BaseDTO model) {
         try {
