@@ -1,5 +1,6 @@
 package com.boot.web.controller;
 
+import com.boot.common.dao.enums.UserStatus;
 import com.boot.common.model.JSONResult;
 import com.boot.common.model.Pager;
 import com.boot.common.web.controller.BaseController;
@@ -28,7 +29,7 @@ public class UserController extends BaseController {
         user.setEmail(vo.getEmail());
         user.setName(vo.getName());
         user.setPhone(vo.getPhone());
-        user.setStatus(0);
+        user.setStatus(UserStatus.NORMAL.getValue());
         userService.saveOrUpdate(user);
         return JSONResult.success(true);
     }
