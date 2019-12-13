@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 public class SpringMVCConfig extends WebMvcConfigurationSupport {
 
     @Bean
-    public FilterRegistrationBean<XSSHTTPServletFilter> xsshttpServletFilterFilterRegistrationBean() {
+    public FilterRegistrationBean<XSSHTTPServletFilter> createXSSHTTPServletFilterRegistrationBean() {
         // 新建过滤器注册类
         FilterRegistrationBean<XSSHTTPServletFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new XSSHTTPServletFilter());
