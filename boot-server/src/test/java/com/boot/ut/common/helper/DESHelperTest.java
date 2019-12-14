@@ -5,7 +5,7 @@ import com.boot.ut.common.AbstractTestCase;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestDESHelper extends AbstractTestCase {
+public class DESHelperTest extends AbstractTestCase {
 
     @Test
     public void testDES() throws Exception {

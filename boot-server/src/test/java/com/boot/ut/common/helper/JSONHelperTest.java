@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestJSONHelper extends AbstractTestCase {
+public class JSONHelperTest extends AbstractTestCase {
 
     @Test
     public void testToJSONString() {

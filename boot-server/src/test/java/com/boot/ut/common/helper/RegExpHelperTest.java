@@ -5,7 +5,7 @@ import com.boot.ut.common.AbstractTestCase;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestRegExpHelper extends AbstractTestCase {
+public class RegExpHelperTest extends AbstractTestCase {
 
     @Test
     public void testMatch() {

@@ -33,3 +33,5 @@ target/*
 .settings
 .project
 .DS_Store
+
+output/*

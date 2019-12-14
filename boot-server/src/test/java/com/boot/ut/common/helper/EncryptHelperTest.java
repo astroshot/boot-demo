@@ -5,7 +5,7 @@ import com.boot.ut.common.AbstractTestCase;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestEncryptHelper extends AbstractTestCase {
+public class EncryptHelperTest extends AbstractTestCase {
 
     @Test
     public void testEncryptMD5() {
