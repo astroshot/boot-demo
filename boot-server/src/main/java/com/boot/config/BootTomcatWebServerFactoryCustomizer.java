@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * 自定义Tomcat容器配置类
  */
 @Component
-public class TomcatWebServerFactoryCustomizer
+public class BootTomcatWebServerFactoryCustomizer
         implements WebServerFactoryCustomizer<TomcatServletWebServerFactory> {
 
     public static final int DEFAULT_MAX_PARAMETER_COUNT = -1;
