@@ -33,4 +33,37 @@ public abstract class DateHelper {
     public static String getUTCDateTime() {
         return getUTCDateTime(new Date());
     }
+
+    /**
+     * Convert timestamp to java.util.Date
+     *
+     * @param timestamp timestamp in ms
+     * @return Date
+     */
+    public static Date convertToDate(long timestamp) {
+        return new Date(timestamp);
+    }
+
+    /**
+     * Convert timestamp to String in given format
+     *
+     * @param timestamp timestamp in ms
+     * @param format    datetime format
+     * @return Date in String
+     */
+    public static String convertToDateString(long timestamp, String format) {
+        Date date = new Date(timestamp);
+        return new SimpleDateFormat(format).format(date);
+    }
+
+    /**
+     * Convert timestamp to String in default format `yyyy-MM-dd HH:mm:ss`
+     *
+     * @param timestamp timestamp in ms
+     * @return Date in String
+     */
+    public static String convertToDateString(long timestamp) {
+        Date date = new Date(timestamp);
+        return new SimpleDateFormat(CommonConstant.DEFAULT_DATE_FORMAT).format(date);
+    }
 }
