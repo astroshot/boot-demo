@@ -64,8 +64,12 @@ public class JSONResult<T> implements Serializable {
         this.msg = msg;
     }
 
+    public static <T> JSONResult<T> create(int code, T data, String msg) {
+        return new JSONResult<>(code, data, msg);
+    }
+
     public static <T> JSONResult<T> success(T data) {
-        JSONResult<T> res = new JSONResult<>(JSONResult.SUCCESS, data, "Success!");
+        JSONResult<T> res = create(JSONResult.SUCCESS, data, "Success");
         if (LOGGER.isDebugEnabled()) {
             String logString = res.toString();
             if (logString.length() > DEFAULT_MAX_LOG_LENGTH) {
@@ -76,16 +80,12 @@ public class JSONResult<T> implements Serializable {
         return res;
     }
 
-    public static <T> JSONResult<T> error(int code, T data, String msg) {
-        return new JSONResult<>(code, data, msg);
-    }
-
     public static <T> JSONResult<T> error(T data, String msg) {
-        return new JSONResult<>(JSONResult.ERROR, data, msg);
+        return create(JSONResult.ERROR, data, msg);
     }
 
     public static <T> JSONResult<T> error(T data) {
-        return new JSONResult<>(JSONResult.ERROR, data, "Failed");
+        return create(JSONResult.ERROR, data, "Failed");
     }
 
     @Override

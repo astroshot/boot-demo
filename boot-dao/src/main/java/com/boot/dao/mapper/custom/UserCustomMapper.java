@@ -1,12 +1,14 @@
 package com.boot.dao.mapper.custom;
 
 import com.boot.dao.model.User;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Param;
 
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
+
 
 public interface UserCustomMapper {
 
@@ -42,4 +44,14 @@ public interface UserCustomMapper {
             return sb.toString();
         }
     }
+
+    @Insert("<script>" +
+            "INSERT INTO `user` " +
+            "(`name`, `email`, `phone`, `status`, `created_at`, `updated_at`) " +
+            "VALUES " +
+            "<foreach collection='list' item='list' separator=',' > " +
+            "(#{list.name}, #{list.email}, #{list.phone}, #{list.status}, #{list.createdAt}, #{list.updatedAt}) " +
+            "</foreach>" +
+            "</script>")
+    int insertAll(@Param("list") List<User> users);
 }

@@ -6,9 +6,11 @@ import com.boot.common.model.Pager;
 import com.boot.common.web.controller.BaseController;
 import com.boot.dao.model.User;
 import com.boot.dao.service.UserService;
+import com.boot.dao.service.model.UserBO;
 import com.boot.dao.service.model.UserQueryBO;
 import com.boot.web.model.UserQueryVO;
 import com.boot.web.model.UserVO;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class UserController extends BaseController {
@@ -49,5 +52,15 @@ public class UserController extends BaseController {
 
         Pager<User> users = userService.getBy(condition);
         return JSONResult.success(users);
+    }
+
+    @PostMapping("/all-users")
+    public JSONResult<?> saveAllUsers(@RequestBody(required = false) List<UserBO> users) {
+        if (CollectionUtils.isEmpty(users)) {
+            return JSONResult.success("users 为空");
+        }
+
+        int res = userService.insertAll(users);
+        return JSONResult.create(0, res > 0, "");
     }
 }

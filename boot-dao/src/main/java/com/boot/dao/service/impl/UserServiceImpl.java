@@ -95,4 +95,27 @@ public class UserServiceImpl implements UserService {
         return userCustomMapper.saveAll(userList) > 0;
     }
 
+    @Override
+    public int insertAll(List<UserBO> users) {
+        if (CollectionUtils.isEmpty(users)) {
+            return 0;
+        }
+
+        List<User> userList = new ArrayList<>(users.size());
+        Date now = new Date();
+
+        for (UserBO item : users) {
+            User user = new User();
+            user.setName(item.getName());
+            user.setEmail(item.getEmail());
+            user.setPhone(item.getPhone());
+            user.setStatus(item.getStatus());
+            user.setCreatedAt(now);
+            user.setUpdatedAt(now);
+
+            userList.add(user);
+        }
+
+        return userCustomMapper.insertAll(userList);
+    }
 }
