@@ -9,11 +9,19 @@ public abstract class Base64Helper {
 
     protected static Logger logger = LoggerFactory.getLogger(Base64Helper.class);
 
-    public static String encode(String input) {
-        return Base64.getEncoder().encodeToString(input.getBytes());
+    public static String encode(byte[] input) {
+        return Base64.getEncoder().encodeToString(input);
     }
 
-    public static String decode(String input) {
-        return new String(Base64.getDecoder().decode(input));
+    public static String encode(String input) {
+        return encode(input.getBytes());
+    }
+
+    public static String decodeToStr(String input) {
+        return new String(decode(input));
+    }
+
+    public static byte[] decode(String input) {
+        return Base64.getDecoder().decode(input);
     }
 }
