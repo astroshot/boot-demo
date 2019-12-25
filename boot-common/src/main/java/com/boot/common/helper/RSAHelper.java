@@ -282,4 +282,8 @@ public abstract class RSAHelper {
         Key key = keyMap.get(PRIVATE_KEY);
         return (PrivateKey) key;
     }
+
+    public static int maxLength(int keySize) {
+        return keySize / 8 - 11;
+    }
 }
