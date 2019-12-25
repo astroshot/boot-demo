@@ -41,7 +41,7 @@ public abstract class EncryptHelper {
             // encryption
             byte[] b = md.digest(sourceString.getBytes(StandardCharsets.UTF_8));
             resultString = byte2hexString(b);
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
         return resultString;
     }
@@ -78,7 +78,7 @@ public abstract class EncryptHelper {
             // encryption
             byte[] b = md.digest(sourceString.getBytes(StandardCharsets.UTF_8));
             resultString = byte2hexString(b);
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
         return resultString;
     }
@@ -91,11 +91,11 @@ public abstract class EncryptHelper {
      */
     private static String byte2hexString(byte[] bytes) {
         StringBuilder builder = new StringBuilder(bytes.length * 2);
-        for (int i = 0; i < bytes.length; i++) {
-            if (((int) bytes[i] & 0xff) < 0x10) {
+        for (byte b : bytes) {
+            if (((int) b & 0xff) < 0x10) {
                 builder.append("0");
             }
-            builder.append(Long.toString((int) bytes[i] & 0xff, 16));
+            builder.append(Long.toString((int) b & 0xff, 16));
         }
         return builder.toString();
     }
