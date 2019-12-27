@@ -29,6 +29,7 @@
         <maven.site.version>3.7.1</maven.site.version>
         <maven.project.info.version>3.0.0</maven.project.info.version>
         <spring.boot.version>2.1.4.RELEASE</spring.boot.version>
+        <spring.web.version>5.1.6.RELEASE</spring.web.version>
     </properties>
 
     <build>
