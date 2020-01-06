@@ -18,4 +18,5 @@ public abstract class Constants {
      */
     public static final long CAPTCHA_TIME_OUT = 30 * 1000;
 
+    public static final String REQUEST_PARAMETERS = "REQUEST_PARAMETERS";
 }
