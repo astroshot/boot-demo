@@ -17,6 +17,7 @@ public class LocalCacheServiceImpl<K, V> implements CacheService<K, V> {
     public boolean put(K k, V v) {
         try {
             cache.put(k, v);
+            logger.info("put k: {}, v: {}", k, v);
             return true;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -32,7 +33,9 @@ public class LocalCacheServiceImpl<K, V> implements CacheService<K, V> {
     @Override
     public V get(K k) {
         try {
-            return cache.getIfPresent(k);
+            V v = cache.getIfPresent(k);
+            logger.info("get k: {}, v: {}", k, v);
+            return v;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -41,8 +44,9 @@ public class LocalCacheServiceImpl<K, V> implements CacheService<K, V> {
 
     @Override
     public V remove(K k) {
-        V val = get(k);
+        V v = get(k);
         cache.invalidate(k);
-        return val;
+        logger.info("remove k: {}, v: {}", k, v);
+        return v;
     }
 }
