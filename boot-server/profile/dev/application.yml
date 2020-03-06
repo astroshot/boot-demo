@@ -1,0 +1,27 @@
+server:
+  port: 8001
+  session-timeout: 10
+  tomcat:
+    max-threads: 20
+    uri-encoding: UTF-8
+    max-http-header-size: 102400
+    maxParameterCount: 100000
+  logging:
+    config: classpath*:logback.xml
+  servlet:
+    context-path: /boot-demo
+    session:
+      cookie:
+        name: BOOT-SESSIONID  # replace JSESSIONID
+
+spring:
+  datasource:
+    name: test
+    url: jdbc:mysql://localhost:3306/test?characterEncoding=utf-8
+    username: root
+    password:
+    driver-class-name: com.mysql.jdbc.Driver
+
+mybatis:
+  typeAliasesPackage: com.boot.dao.model
+  mapperLocations: classpath*:mappers/**Mapper.xml
