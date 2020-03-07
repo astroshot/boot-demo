@@ -1,6 +1,7 @@
 package com.boot.common.web.filter;
 
 import com.boot.common.web.filter.wrapper.RequestBodyCacheWrapper;
+import com.boot.common.web.helper.RequestHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
@@ -17,15 +18,13 @@ import java.io.IOException;
  */
 public class RequestBodyCacheWrapFilter extends OncePerRequestFilter {
 
-    private static final String POST_FORM = "application/x-www-form-urlencoded";
-
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
-            if (isFormBody(request)) {
+            if (RequestHelper.isFormBody(request)) {
                 filterChain.doFilter(request, response);
             } else {
                 filterChain.doFilter(new RequestBodyCacheWrapper(request), response);
@@ -36,12 +35,4 @@ public class RequestBodyCacheWrapFilter extends OncePerRequestFilter {
         }
     }
 
-    protected boolean isFormBody(HttpServletRequest request) {
-        String contentType = request.getContentType();
-        if (contentType == null) {
-            return false;
-        }
-
-        return (contentType.contains(POST_FORM) && HttpMethod.POST.matches(request.getMethod()));
-    }
 }

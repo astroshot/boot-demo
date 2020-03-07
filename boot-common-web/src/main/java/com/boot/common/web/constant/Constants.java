@@ -19,4 +19,9 @@ public abstract class Constants {
     public static final long CAPTCHA_TIME_OUT = 30 * 1000;
 
     public static final String REQUEST_PARAMETERS = "REQUEST_PARAMETERS";
+
+    public static final String FORM_CONTENT = "application/x-www-form-urlencoded";
+
+    public static final String JSON_CONTENT = "application/json";
+
 }

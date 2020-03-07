@@ -84,8 +84,12 @@ public abstract class RSAHelper {
         // 取公钥匙对象
         PublicKey pubKey = keyFactory.generatePublic(keySpec);
 
+        return verify(data, pubKey, sign);
+    }
+
+    public static boolean verify(byte[] data, PublicKey publicKey, String sign) throws Exception {
         Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
-        signature.initVerify(pubKey);
+        signature.initVerify(publicKey);
         signature.update(data);
 
         // 验证签名是否正常
@@ -93,6 +97,11 @@ public abstract class RSAHelper {
     }
 
     public static boolean verify(String data, String publicKey, String sign) throws Exception {
+        return verify(data.getBytes(StandardCharsets.UTF_8), publicKey, sign);
+    }
+
+
+    public static boolean verify(String data, PublicKey publicKey, String sign) throws Exception {
         return verify(data.getBytes(StandardCharsets.UTF_8), publicKey, sign);
     }
 
