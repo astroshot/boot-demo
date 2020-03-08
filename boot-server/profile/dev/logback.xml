@@ -1,13 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <appender name="STOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <property name="LOG_DIR" value="${LOG_DIR}"/>
+
+    <!-- 系统启动日志输出文件 -->
+    <appender name="fileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_DIR}/boot-server.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_DIR}/boot-server-%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
         <encoder>
             <charset>UTF-8</charset>
-            <pattern>%d-[%t]-[%level] | %C{0}.%method\(%line\) | %msg%n</pattern>
+            <pattern>%d [%t] [%level] | %C{0}.%method\(%line\) | %msg%n</pattern>
         </encoder>
     </appender>
+
+    <!-- 异常日志 -->
+    <appender name="errorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_DIR}/boot-server-error.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_DIR}/boot-server-error-%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d [%t] [%level] | %C{0}.%method\(%line\) | %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
     <root>
-        <level value="INFO" />
-        <appender-ref ref="STOUT" />
+        <level value="INFO"/>
+        <appender-ref ref="fileAppender"/>
+        <appender-ref ref="errorAppender"/>
     </root>
 </configuration>
