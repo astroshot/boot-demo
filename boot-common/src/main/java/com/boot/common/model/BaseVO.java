@@ -1,4 +1,4 @@
-package com.boot.common.web.model;
+package com.boot.common.model;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;

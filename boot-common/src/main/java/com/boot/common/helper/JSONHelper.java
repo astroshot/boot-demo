@@ -113,7 +113,7 @@ public abstract class JSONHelper {
      * @param collection @see java.util.Collection
      * @return JSON String
      */
-    public static String toJSONString(Collection collection) {
+    public static String toJSONString(Collection<?> collection) {
         return JSONArray.toJSONString(
                 collection,
                 SerializerFeature.WriteDateUseDateFormat,

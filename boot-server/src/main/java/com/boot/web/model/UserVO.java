@@ -1,6 +1,6 @@
 package com.boot.web.model;
 
-import com.boot.common.web.model.BaseVO;
+import com.boot.common.model.BaseVO;
 import lombok.Data;
 
 

@@ -5,12 +5,7 @@ import java.util.Map;
 
 public abstract class ThreadLocalContextHolder {
 
-    private static final ThreadLocal<Map<String, Object>> CONTEXT = new ThreadLocal<Map<String, Object>>() {
-        @Override
-        protected Map<String, Object> initialValue() {
-            return new HashMap<>();
-        }
-    };
+    private static final ThreadLocal<Map<String, Object>> CONTEXT = ThreadLocal.withInitial(HashMap::new);
 
     public static Object get(String key) {
         if (CONTEXT.get() == null) {
