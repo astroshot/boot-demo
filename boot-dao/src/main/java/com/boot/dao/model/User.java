@@ -10,17 +10,20 @@ public class User extends BaseModel {
 
     private String phone;
 
+    private Integer type;
+
     private Integer status;
 
     private Date createdAt;
 
     private Date updatedAt;
 
-    public User(Long id, String name, String email, String phone, Integer status, Date createdAt, Date updatedAt) {
+    public User(Long id, String name, String email, String phone, Integer type, Integer status, Date createdAt, Date updatedAt) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.phone = phone;
+        this.type = type;
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -52,6 +55,14 @@ public class User extends BaseModel {
 
     public void setPhone(String phone) {
         this.phone = phone == null ? null : phone.trim();
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public Integer getStatus() {

@@ -28,7 +28,7 @@ public interface UserMapper {
 
     int updateByPrimaryKey(User record);
 
-    public static final String COLUMNS = "id, name, email, phone, status, created_at, updated_at";
+    public static final String COLUMNS = "id, name, email, phone, type, status, created_at, updated_at";
 
     public static final String TABLE_NAME = "user";
 }

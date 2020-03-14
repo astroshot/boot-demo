@@ -80,6 +80,10 @@ public class JSONResult<T> implements Serializable {
         return res;
     }
 
+    public static <T> JSONResult<T> success() {
+        return success(null);
+    }
+
     public static <T> JSONResult<T> error(T data, String msg) {
         return create(JSONResult.ERROR, data, msg);
     }

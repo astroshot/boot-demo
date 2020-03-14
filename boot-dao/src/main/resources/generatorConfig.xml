@@ -6,7 +6,7 @@
 
 <generatorConfiguration>
     <!--导入属性配置-->
-    <properties resource="datasource.properties"/>
+    <properties resource="config.properties"/>
     <!--指定特定数据库的jdbc驱动jar包的位置-->
     <!--<classPathEntry location="E:/idea_workspace/mumall/mysql-connector-java-5.1.6-bin.jar"/>-->
 
@@ -23,8 +23,8 @@
         <plugin type="com.boot.mybatis.generator.plugin.MapperPlugin"/>
         <plugin type="com.boot.mybatis.generator.plugin.PagerPlugin"/>
         <plugin type="com.boot.mybatis.generator.plugin.SuperClassPlugin">
-            <property name="addSuperClass" value="true" />
-            <property name="superClass" value="com.boot.common.dao.model.BaseModel" />
+            <property name="addSuperClass" value="true"/>
+            <property name="superClass" value="com.boot.common.dao.model.BaseModel"/>
         </plugin>
         <!-- optional，旨在创建class时，对注释进行控制 -->
         <commentGenerator>
@@ -41,7 +41,7 @@
         </jdbcConnection>
 
         <!-- 非必需，类型处理器，在数据库类型和java类型之间的转换控制-->
-        <javaTypeResolver>
+        <javaTypeResolver type="com.boot.mybatis.generator.resolver.JavaTypeResolverIntegerImpl">
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
@@ -83,6 +83,18 @@
         <table tableName="user" domainObjectName="User" delimitIdentifiers="true">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
+        <!--<table tableName="province" delimitIdentifiers="true">-->
+        <!--    <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+        <!--</table>-->
+        <!--<table tableName="city" delimitIdentifiers="true">-->
+        <!--    <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+        <!--</table>-->
+        <!--<table tableName="county" delimitIdentifiers="true">-->
+        <!--    <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+        <!--</table>-->
+        <!--<table tableName="town" delimitIdentifiers="true">-->
+        <!--    <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+        <!--</table>-->
 
     </context>
 </generatorConfiguration>
