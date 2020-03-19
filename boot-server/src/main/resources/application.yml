@@ -30,6 +30,14 @@ spring:
     password:
     driver-class-name: com.mysql.jdbc.Driver
 
+cache:
+  active: local
+  redis:
+    host: localhost
+    port: 6379
+    max-total: 200
+    max-idle: 10
+
 mybatis:
   typeAliasesPackage: com.boot.dao.model
   mapperLocations: classpath*:mappers/**Mapper.xml

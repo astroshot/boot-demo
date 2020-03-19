@@ -17,10 +17,20 @@ server:
 spring:
   datasource:
     name: test
-    url: jdbc:mysql://localhost:3306/test?characterEncoding=utf-8
+    url: jdbc:h2:mem:test;MODE=MYSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;
     username: root
     password:
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: org.h2.Driver
+    schema: classpath:sql/schema/schema.sql
+    data: classpath:sql/data/data.sql
+
+cache:
+  active: local
+  redis:
+    host: localhost
+    port: 6379
+    max-total: 200
+    max-idle: 10
 
 mybatis:
   typeAliasesPackage: com.boot.dao.model
