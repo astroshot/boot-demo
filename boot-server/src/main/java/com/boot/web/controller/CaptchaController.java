@@ -66,7 +66,7 @@ public class CaptchaController extends BaseController {
             out.flush();
             out.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return null;
     }
