@@ -17,7 +17,7 @@ public class BootTomcatWebServerFactoryCustomizer
 
     public static final int DEFAULT_MAX_PARAMETER_COUNT = -1;
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 单次请求参数最大限制数

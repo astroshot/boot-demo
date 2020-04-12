@@ -11,7 +11,7 @@ public class LocalCacheServiceImpl<K, V> implements CacheService<K, V> {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Cache<K, V> cache = CacheBuilder.newBuilder().build();
+    private final Cache<K, V> cache = CacheBuilder.newBuilder().build();
 
     @Override
     public boolean put(K k, V v) {

@@ -26,11 +26,16 @@ spring:
 
 cache:
   active: local
+  key:
+    prefix: boot-demo-test
   redis:
     host: localhost
     port: 6379
     max-total: 200
     max-idle: 10
+
+swagger:
+  enable: true
 
 mybatis:
   typeAliasesPackage: com.boot.dao.model

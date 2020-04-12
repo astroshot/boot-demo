@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 public class ThreadPoolConfig {
 
     @Bean
-    public ExecutorService getThreadPool(){
+    public ExecutorService getScheduledThreadPool(){
         return Executors.newScheduledThreadPool(5);
     }
 
