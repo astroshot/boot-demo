@@ -5,6 +5,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.boot.common.context.ThreadLocalContextHolder;
 import com.boot.common.web.constant.Constants;
 import com.boot.common.web.helper.IPHelper;
+import com.boot.common.web.helper.RequestHelper;
 import com.boot.common.web.model.LogInfo;
 import com.boot.common.web.model.LogInfoContext;
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ public class LogFilter extends OncePerRequestFilter {
         }
     }
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -65,7 +66,7 @@ public class LogFilter extends OncePerRequestFilter {
 
             String[] values = request.getParameterValues(item);
             if (values == null) {
-                values = new String[] {""};
+                values = new String[]{""};
             }
 
             for (String val : values) {
@@ -89,6 +90,10 @@ public class LogFilter extends OncePerRequestFilter {
         }
 
         String requestBody = null;
+        if (request instanceof RequestBodyCacheWrapFilter) {
+            requestBody = RequestHelper.getBody(request);
+        }
+
         builder.clientIP(IPHelper.getIPAddress(request)).httpMethod(request.getMethod())
                 .uri(URLDecoder.decode(request.getRequestURI()))
                 .header(header)

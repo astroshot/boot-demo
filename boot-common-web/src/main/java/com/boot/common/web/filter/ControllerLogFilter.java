@@ -22,7 +22,7 @@ import java.io.StringWriter;
 @Component
 public class ControllerLogFilter {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Before("within(com.boot..web.controller*..*)")
     public void controllerHandleRequest(JoinPoint jp) {

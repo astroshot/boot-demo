@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class XSSHTTPServletFilter extends OncePerRequestFilter {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
