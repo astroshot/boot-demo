@@ -68,6 +68,29 @@ public abstract class DateHelper {
         return new SimpleDateFormat(CommonConstant.DEFAULT_DATE_FORMAT).format(date);
     }
 
+    /**
+     * Get first day of given year and month
+     *
+     * @param year  eg: 2020
+     * @param month eg: 2
+     * @return first day of given year and month
+     */
+    public static Date getFirstDayOfMonth(int year, int month) {
+        if (year < 0 || month < 0) {
+            return null;
+        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month - 1);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
     public static Date getFirstDayOfMonth(Date now) {
         if (now == null) {
             return null;
@@ -91,6 +114,29 @@ public abstract class DateHelper {
         Calendar cal = Calendar.getInstance();
         cal.setTime(now);
         cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.MONTH));
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MILLISECOND, 999);
+        return cal.getTime();
+    }
+
+    /**
+     * Get last day of given year and month
+     *
+     * @param year  eg: 2020
+     * @param month eg: 2
+     * @return last day of given year and month
+     */
+    public static Date getLastDayOfMonth(int year, int month) {
+        if (year < 0 || month < 0) {
+            return null;
+        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month - 1);
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
         cal.set(Calendar.HOUR_OF_DAY, 23);
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 59);
