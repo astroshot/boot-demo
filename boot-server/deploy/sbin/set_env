@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+DEV_ZK="127.0.0.1:9340"
+DEV_DUBBO_MONITOR="127.0.0.1:8190"
+TEST_ZK="127.0.0.1:8180"
+TEST_DUBBO_MONITOR="127.0.0.1:8190"
+ONLINE_ZK="127.0.0.1:8180"
+ONLINE_DUBBO_MONITOR="127.0.0.1:8190"
+
+IDC=$(hostname |awk -F '.' '{print $(NF-2)}')
+ENV_FLAG=$2
+
+stout() {
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')]: $@" >&2
+    return 0
+}
+
+if  [[ $ENV_FLAG ]];then
+    stout "INFO: specified environment ENV_FLAG=$ENV_FLAG"
+else
+    stout "INFO: not specified environment ENV_FLAG,user auto mate"
+    case $IDC in
+        prod1|prod2|prod3) # 生产环境前缀
+            ENV_FLAG=online
+            DUBBO_MONITOR=$ONLINE_DUBBO_MONITOR
+            stout "IDC=$IDC"
+        ;;
+        test)  # 测试环境前缀
+            ENV_FLAG=test
+            DUBBO_MONITOR=$TEST_DUBBO_MONITOR
+            stout "IDC=$IDC"
+        ;;
+        *)
+            ENV_FLAG=dev
+            DUBBO_MONITOR=$DEV_DUBBO_MONITOR
+            stout "IDC=$IDC,not mate production environment."
+    esac
+fi
+
+DEPLOY_DIR=$(cd $(dirname $0);cd ..;pwd)
+
+JAVA_HOME=$DEPLOY_DIR/jdk
+PATH=$JAVA_HOME/bin:$PATH
+
+export JAVA_HOME PATH

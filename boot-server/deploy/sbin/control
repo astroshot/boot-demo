@@ -1,0 +1,210 @@
+#!/usr/bin/env bash
+
+set -x
+
+DEPLOY_DIR=$(
+    cd $(dirname $0)
+    cd ..
+    pwd
+)
+CONF_DIR=$DEPLOY_DIR/conf
+LOGS_DIR=$DEPLOY_DIR/logs
+LOGS_FILE=$DEPLOY_DIR/logs/deploy.log
+LIB_DIR=$DEPLOY_DIR/lib
+LIB_JARS=$(ls "$LIB_DIR" | fgrep .jar | awk '{print "'$LIB_DIR'/"$0}' | tr "\n" ":")
+JAVA_OPTS=" -Djava.awt.headless=true -Djava.net.preferIPv4Stack=true "
+MAIN_CLASS=
+MAIN_ARGS=
+JVM_CONF=$CONF_DIR/jvm.conf
+ENV_CONF=$CONF_DIR/env.conf
+JAVAAGENT=
+
+source $DEPLOY_DIR/sbin/set_env
+
+if [ ! -d "$LOGS_DIR" ]; then
+    mkdir $LOGS_DIR
+fi
+
+stout() {
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')]: $@" >&2
+    return 0
+}
+
+change_code() {
+    dos2unix "$1" 2>/dev/null >/dev/null
+}
+
+cp_conf() {
+    if [[ ! -d "$DEPLOY_DIR/profile/$ENV_FLAG" ]]; then
+        stout "Can't find the ENV: $ENV_FLAG"
+        exit 1
+    fi
+    cp -rf "$DEPLOY_DIR"/profile/"$ENV_FLAG"/* "$CONF_DIR"/
+}
+
+add_prism() {
+    if [[ "$prism" == "true" ]]; then
+        appname=${server_name}"["$(hostname -i)":"${server_port}"]"
+        cat $DEPLOY_DIR/prism/prism-conf-tmp.yml | sed "s/#APPNAME#/${appname}/g" >$DEPLOY_DIR/prism/prism-conf.yml
+    fi
+
+}
+
+add_jacoco() {
+    if [[ "$jacoco" == "true" && "$jacoco_active" == "true" ]]; then
+        JAVAAGENT="$JAVAAGENT -javaagent:$DEPLOY_DIR/jacoco/jacocoagent.jar"
+    fi
+}
+
+init() {
+
+    if [[ -f $ENV_CONF ]]; then
+        change_code "$ENV_CONF"
+        source $ENV_CONF
+    fi
+
+    if [[ -f $JVM_CONF ]]; then
+        change_code "$JVM_CONF"
+        source $JVM_CONF
+    fi
+}
+
+check() {
+
+    if [[ ! $timeout ]]; then
+        timeout=120
+    fi
+
+    start_time=$(date +%s)
+    while true; do
+        return_code=$(curl -I -s -X GET -m10 "http://127.0.0.1:$server_port$server_context_path/$check_url" | grep '^HTTP' | awk '{print $2}')
+        if [ "$return_code" != "200" ]; then
+            if (($(($(date +%s) - $start_time)) > $timeout)); then
+                stout "uptime $(($(date +%s) - $start_time))s"
+                stout 'check url fail.'
+                exit 1
+            else
+                sleep 3
+                continue
+            fi
+        fi
+
+        return_content=$(curl -s -m10 -X GET "http://127.0.0.1:$server_port$server_context_path/$check_url")
+        if [ "$return_content" != "$check_content" ]; then
+            stout 'check url fail.'
+            exit 1
+        else
+            sleep 3
+            continue
+        fi
+
+        return_content=$(curl -s -m10 -X GET "http://127.0.0.1:$server_port$server_context_path/$check_url")
+        if [ "$return_content" != "$check_content" ]; then
+            stout 'check url fail.'
+            exit 1
+        else
+            stout "start success!!!"
+            break
+        fi
+    done
+}
+
+start() {
+
+    cp_conf && init && add_prism && add_jacoco
+
+    PIDS=$(ps --no-heading -C java -f --width 1000 | grep "$CONF_DIR" | awk '{print $2}')
+    if [ -n "$PIDS" ]; then
+        stout "ERROR: The $server_name already started!"
+        stout "PID: $PIDS"
+        exit 1
+    fi
+
+    echo -e "[$(date +'%Y-%m-%d %H:%M:%S')]: Starting the $server_name ..."
+
+    JAVA_OPTS=" -Dserver.port=$server_port -Dserver.tomcat.basedir=$DEPLOY_DIR -Dserver.context-path=$server_context_path -Dserver.servlet.context-path=$server_context_path -Dspring.profiles.active="$ENV_FLAG" $JAVA_OPTS "
+
+    nohup java "$JAVAAGENT" "$JAVA_OPTS" -classpath "$CONF_DIR":"$LIB_JARS" $MAIN_CLASS $MAIN_ARGS >>"$LOGS_FILE" >/dev/null 2>&1 &
+    sleep 5
+    check
+
+    cat <<EOF
+
+env_flag:        $ENV_FLAG
+port:            $server_port
+JAVA_HOME:       $JAVA_HOME
+EOF
+}
+
+stop() {
+
+    PIDS=$(ps --no-heading -C java -f --width 1000 | grep "$DEPLOY_DIR" | awk '{print $2}')
+
+    if [ -z "$PIDS" ]; then
+        stout "ERROR: The $server_name does not started!"
+        exit 1
+    fi
+
+    echo -e "[$(date +'%Y-%m-%d %H:%M:%S')]: Stopping the $server_name ...\c"
+
+    for PID in $PIDS; do
+        kill "$PID" >/dev/null 2>&1
+    done
+
+    COUNT=0
+    while [ $COUNT -lt 5 ]; do
+
+        echo -e ".\c"
+        sleep 2
+
+        for PID in $PIDS; do
+            PID_EXIST=$(ps --no-heading -p "$PID")
+            if [ -n "$PID_EXIST" ]; then
+                COUNT=$(($COUNT + 1))
+                continue
+            else
+                COUNT=1000
+            fi
+        done
+
+    done
+
+    echo ""
+    for PID in $PIDS; do
+        PID_EXIST=$(ps --no-heading -p $PID)
+        if [ -n "$PID_EXIST" ]; then
+            stout "kill -9 $PID"
+            kill -9 "$PID" >/dev/null 2>&1
+        fi
+    done
+    stout "Stop OK!"
+    stout "PID: $PIDS"
+
+}
+
+restart() {
+    stop && start "$1"
+}
+
+main() {
+
+    case $1 in
+
+        start)
+            start "$2"
+            ;;
+        stop)
+            stop
+            ;;
+        restart)
+            restart "$2"
+            ;;
+        *)
+            stout "ERROR !!!"
+            stout "please $0 (start|stop|restart)"
+            exit 1
+    esac
+
+}
+
+main "$@"
