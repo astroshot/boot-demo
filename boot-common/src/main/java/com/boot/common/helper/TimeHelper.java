@@ -23,9 +23,7 @@ public class TimeHelper {
             Thread thread = new Thread(runnable, "current-time-millisecond");
             thread.setDaemon(true);
             return thread;
-        }).scheduleAtFixedRate(() -> {
-            timestamp = System.currentTimeMillis();
-        }, 1, 1, TimeUnit.MILLISECONDS);
+        }).scheduleAtFixedRate(() -> timestamp = System.currentTimeMillis(), 1, 1, TimeUnit.MILLISECONDS);
     }
 
     public long now() {

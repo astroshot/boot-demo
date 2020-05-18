@@ -40,9 +40,8 @@ public class MybatisShowSqlInterceptor implements Interceptor {
             return invocation.proceed();
         }
 
-        StringBuilder builder = new StringBuilder("");
+        StringBuilder builder = new StringBuilder();
         try {
-
             Object parameter;
             if (invocation.getArgs() != null && invocation.getArgs().length > 1) {
                 parameter = invocation.getArgs()[1];
@@ -69,9 +68,7 @@ public class MybatisShowSqlInterceptor implements Interceptor {
 
     protected String getSql(Configuration configuration, BoundSql boundSql, String sqlId) {
         String sql = showSql(configuration, boundSql);
-        StringBuilder builder = new StringBuilder(100);
-        builder.append(sqlId).append(", SQL: ").append(sql);
-        return builder.toString();
+        return sqlId + ", SQL: " + sql;
     }
 
     protected String getParameterValue(Object obj) {
