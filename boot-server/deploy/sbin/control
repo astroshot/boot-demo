@@ -7,6 +7,7 @@ DEPLOY_DIR=$(
     cd ..
     pwd
 )
+
 CONF_DIR=$DEPLOY_DIR/conf
 LOGS_DIR=$DEPLOY_DIR/logs
 LOGS_FILE=$DEPLOY_DIR/logs/deploy.log
@@ -18,8 +19,9 @@ MAIN_ARGS=
 JVM_CONF=$CONF_DIR/jvm.conf
 ENV_CONF=$CONF_DIR/env.conf
 JAVAAGENT=
+ENV_FLAG=$2
 
-source $DEPLOY_DIR/sbin/set_env
+# source $DEPLOY_DIR/sbin/set_env
 
 if [ ! -d "$LOGS_DIR" ]; then
     mkdir $LOGS_DIR
@@ -39,7 +41,7 @@ cp_conf() {
         stout "Can't find the ENV: $ENV_FLAG"
         exit 1
     fi
-    cp -rf "$DEPLOY_DIR"/profile/"$ENV_FLAG"/* "$CONF_DIR"/
+    cp -rf $DEPLOY_DIR/profile/$ENV_FLAG/* $CONF_DIR/
 }
 
 add_prism() {
@@ -78,24 +80,17 @@ check() {
     start_time=$(date +%s)
     while true; do
         return_code=$(curl -I -s -X GET -m10 "http://127.0.0.1:$server_port$server_context_path/$check_url" | grep '^HTTP' | awk '{print $2}')
+        end_time=$(date +%s)
         if [ "$return_code" != "200" ]; then
-            if (($(($(date +%s) - $start_time)) > $timeout)); then
-                stout "uptime $(($(date +%s) - $start_time))s"
+            duration=$end_time-$start_time
+            if (($duration > $timeout)); then
+                stout "uptime ${duration}s"
                 stout 'check url fail.'
                 exit 1
             else
                 sleep 3
                 continue
             fi
-        fi
-
-        return_content=$(curl -s -m10 -X GET "http://127.0.0.1:$server_port$server_context_path/$check_url")
-        if [ "$return_content" != "$check_content" ]; then
-            stout 'check url fail.'
-            exit 1
-        else
-            sleep 3
-            continue
         fi
 
         return_content=$(curl -s -m10 -X GET "http://127.0.0.1:$server_port$server_context_path/$check_url")
@@ -124,7 +119,7 @@ start() {
 
     JAVA_OPTS=" -Dserver.port=$server_port -Dserver.tomcat.basedir=$DEPLOY_DIR -Dserver.context-path=$server_context_path -Dserver.servlet.context-path=$server_context_path -Dspring.profiles.active="$ENV_FLAG" $JAVA_OPTS "
 
-    nohup java "$JAVAAGENT" "$JAVA_OPTS" -classpath "$CONF_DIR":"$LIB_JARS" $MAIN_CLASS $MAIN_ARGS >>"$LOGS_FILE" >/dev/null 2>&1 &
+    nohup java $JAVAAGENT $JAVA_OPTS -classpath $CONF_DIR:$LIB_JARS $MAIN_CLASS $MAIN_ARGS >>$LOGS_FILE >/dev/null 2>&1 &
     sleep 5
     check
 
@@ -190,19 +185,20 @@ main() {
 
     case $1 in
 
-        start)
-            start "$2"
-            ;;
-        stop)
-            stop
-            ;;
-        restart)
-            restart "$2"
-            ;;
-        *)
-            stout "ERROR !!!"
-            stout "please $0 (start|stop|restart)"
-            exit 1
+    start)
+        start "$2"
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        restart "$2"
+        ;;
+    *)
+        stout "ERROR !!!"
+        stout "please $0 (start|stop|restart)"
+        exit 1
+        ;;
     esac
 
 }

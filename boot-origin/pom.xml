@@ -28,6 +28,10 @@
         <spring.boot.version>2.1.4.RELEASE</spring.boot.version>
         <spring.web.version>5.1.6.RELEASE</spring.web.version>
         <org.slf4j.version>1.7.25</org.slf4j.version>
+        <brave.version>5.4.2</brave.version>
+        <zipkin-reporter.version>2.7.10</zipkin-reporter.version>
+        <zipkin.version>2.11.7</zipkin.version>
+        <zipkin.java>2.10.1</zipkin.java>
     </properties>
 
     <build>
