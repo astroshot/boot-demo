@@ -1,7 +1,7 @@
 package com.boot.web.controller;
 
 import com.boot.common.dao.enums.UserStatus;
-import com.boot.common.model.JSONResult;
+import com.boot.common.model.JSONResponse;
 import com.boot.common.model.Pager;
 import com.boot.common.web.controller.BaseController;
 import com.boot.dao.model.User;
@@ -27,21 +27,21 @@ public class UserController extends BaseController {
     private UserService userService;
 
     @PostMapping(value = "/users")
-    public JSONResult<?> users(@RequestBody(required = false) UserVO vo) {
+    public JSONResponse<?> users(@RequestBody(required = false) UserVO vo) {
         User user = new User();
         user.setEmail(vo.getEmail());
         user.setName(vo.getName());
         user.setPhone(vo.getPhone());
         user.setStatus(UserStatus.NORMAL.getValue());
         userService.saveOrUpdate(user);
-        return JSONResult.success(true);
+        return JSONResponse.success(true);
     }
 
     @GetMapping(value = "/users")
-    public JSONResult<?> getUsers(@Valid UserQueryVO param) {
+    public JSONResponse<?> getUsers(@Valid UserQueryVO param) {
 
         if (param.getPageNo() < 1 || param.getPageSize() < 1) {
-            return JSONResult.error("pageNo and pageSize should be positive!");
+            return JSONResponse.error("pageNo and pageSize should be positive!");
         }
 
         UserQueryBO condition = new UserQueryBO();
@@ -51,16 +51,16 @@ public class UserController extends BaseController {
         condition.setPageSize(param.getPageSize());
 
         Pager<User> users = userService.getBy(condition);
-        return JSONResult.success(users);
+        return JSONResponse.success(users);
     }
 
     @PostMapping("/all-users")
-    public JSONResult<?> saveAllUsers(@RequestBody(required = false) List<UserBO> users) {
+    public JSONResponse<?> saveAllUsers(@RequestBody(required = false) List<UserBO> users) {
         if (CollectionUtils.isEmpty(users)) {
-            return JSONResult.success("users 为空");
+            return JSONResponse.success("users 为空");
         }
 
         int res = userService.insertAll(users);
-        return JSONResult.create(0, res > 0, "");
+        return JSONResponse.create(0, res > 0, "");
     }
 }

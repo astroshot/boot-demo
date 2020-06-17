@@ -14,9 +14,9 @@ import java.io.Serializable;
  *
  * @param <T> VO class 类型
  */
-public class JSONResult<T> implements Serializable {
+public class JSONResponse<T> implements Serializable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JSONResult.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JSONResponse.class);
 
     private static final long serialVersionUID = -24395699114309708L;
 
@@ -31,10 +31,10 @@ public class JSONResult<T> implements Serializable {
     private T data;
     private String msg;
 
-    public JSONResult() {
+    public JSONResponse() {
     }
 
-    public JSONResult(int code, T data, String msg) {
+    public JSONResponse(int code, T data, String msg) {
         this.code = code;
         this.data = data;
         this.msg = msg;
@@ -64,12 +64,12 @@ public class JSONResult<T> implements Serializable {
         this.msg = msg;
     }
 
-    public static <T> JSONResult<T> create(int code, T data, String msg) {
-        return new JSONResult<>(code, data, msg);
+    public static <T> JSONResponse<T> create(int code, T data, String msg) {
+        return new JSONResponse<>(code, data, msg);
     }
 
-    public static <T> JSONResult<T> success(T data) {
-        JSONResult<T> res = create(JSONResult.SUCCESS, data, "Success");
+    public static <T> JSONResponse<T> success(T data) {
+        JSONResponse<T> res = create(JSONResponse.SUCCESS, data, "Success");
         if (LOGGER.isDebugEnabled()) {
             String logString = res.toString();
             if (logString.length() > DEFAULT_MAX_LOG_LENGTH) {
@@ -80,16 +80,16 @@ public class JSONResult<T> implements Serializable {
         return res;
     }
 
-    public static <T> JSONResult<T> success() {
+    public static <T> JSONResponse<T> success() {
         return success(null);
     }
 
-    public static <T> JSONResult<T> error(T data, String msg) {
-        return create(JSONResult.ERROR, data, msg);
+    public static <T> JSONResponse<T> error(T data, String msg) {
+        return create(JSONResponse.ERROR, data, msg);
     }
 
-    public static <T> JSONResult<T> error(T data) {
-        return create(JSONResult.ERROR, data, "Failed");
+    public static <T> JSONResponse<T> error(T data) {
+        return create(JSONResponse.ERROR, data, "Failed");
     }
 
     @Override

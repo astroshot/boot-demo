@@ -1,7 +1,7 @@
 package com.boot.common.web.interceptor;
 
 import com.boot.common.helper.RSAHelper;
-import com.boot.common.model.JSONResult;
+import com.boot.common.model.JSONResponse;
 import com.boot.common.web.annotation.RSASign;
 import com.boot.common.web.constant.Constants;
 import com.boot.common.web.filter.wrapper.RequestBodyCacheWrapper;
@@ -120,7 +120,7 @@ public abstract class RSASignInterceptor implements HandlerInterceptor {
 
     protected void handleFailures(HttpServletRequest request, HttpServletResponse response, Object handler) {
         logger.warn("signature verify fails.");
-        String res = JSONResult.create(-1, null, "Illegal signature").toJsonString();
+        String res = JSONResponse.create(-1, null, "Illegal signature").toJsonString();
         ResponseHelper.response(response, Constants.JSON_CONTENT, res);
     }
 

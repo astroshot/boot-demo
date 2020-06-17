@@ -1,6 +1,6 @@
 package com.boot.web.controller;
 
-import com.boot.common.model.JSONResult;
+import com.boot.common.model.JSONResponse;
 import com.boot.common.web.controller.BaseController;
 import com.boot.web.model.JacksonTestVO;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,10 +20,10 @@ public class HelloController extends BaseController {
     }
 
     @GetMapping("/test")
-    public JSONResult<?> test() {
+    public JSONResponse<?> test() {
         JacksonTestVO vo = new JacksonTestVO();
         vo.setCount(1);
         vo.setName("name");
-        return JSONResult.success(vo);
+        return JSONResponse.success(vo);
     }
 }

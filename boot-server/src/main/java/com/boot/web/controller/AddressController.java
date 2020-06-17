@@ -1,6 +1,6 @@
 package com.boot.web.controller;
 
-import com.boot.common.model.JSONResult;
+import com.boot.common.model.JSONResponse;
 import com.boot.common.web.controller.BaseController;
 import com.boot.dao.service.RegionService;
 import com.boot.dao.service.model.vo.RegionQueryVO;
@@ -20,18 +20,18 @@ public class AddressController extends BaseController {
     protected RegionService regionService;
 
     @GetMapping("/query")
-    public JSONResult<?> query(RegionQueryVO param) {
+    public JSONResponse<?> query(RegionQueryVO param) {
         if (param == null) {
-            return JSONResult.success();
+            return JSONResponse.success();
         }
 
         List<RegionVO> regionVOS = regionService.query(param);
-        return JSONResult.success(regionVOS);
+        return JSONResponse.success(regionVOS);
     }
 
     @GetMapping("/provinces")
-    public JSONResult<?> getProvinces() {
+    public JSONResponse<?> getProvinces() {
         List<RegionVO> regionVOS = regionService.getProvinces();
-        return JSONResult.success(regionVOS);
+        return JSONResponse.success(regionVOS);
     }
 }
