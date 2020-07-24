@@ -10,6 +10,9 @@ import com.boot.dao.service.model.UserBO;
 import com.boot.dao.service.model.UserQueryBO;
 import com.boot.web.model.UserQueryVO;
 import com.boot.web.model.UserVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,14 +23,17 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
+@Api("User Controller")
 @RestController
 public class UserController extends BaseController {
 
     @Resource
     private UserService userService;
 
+    @ApiOperation(value = "创建用户", notes = "创建用户", tags = "用户")
+    @ApiImplicitParam(paramType = "body", dataType = "UserVO", required = true)
     @PostMapping(value = "/users")
-    public JSONResponse<?> users(@RequestBody(required = false) UserVO vo) {
+    public JSONResponse<?> users(@Valid @RequestBody UserVO vo) {
         User user = new User();
         user.setEmail(vo.getEmail());
         user.setName(vo.getName());
@@ -37,6 +43,9 @@ public class UserController extends BaseController {
         return JSONResponse.success(true);
     }
 
+
+    @ApiOperation(value = "查询用户", notes = "查询用户", tags = "用户")
+    @ApiImplicitParam(paramType = "query", dataType = "UserQueryVO", required = true)
     @GetMapping(value = "/users")
     public JSONResponse<?> getUsers(@Valid UserQueryVO param) {
 

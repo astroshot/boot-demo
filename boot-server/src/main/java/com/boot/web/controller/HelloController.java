@@ -4,6 +4,8 @@ import com.boot.common.model.JSONResponse;
 import com.boot.common.web.controller.BaseController;
 import com.boot.web.model.JacksonTestVO;
 import com.boot.web.model.ValidationTestVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+@Api("Hello controller")
 @RestController
 @Validated
 public class HelloController extends BaseController {
@@ -21,6 +24,7 @@ public class HelloController extends BaseController {
         return "Greetings from Spring Boot!";
     }
 
+    @ApiOperation(value = "健康检查", notes = "健康检查", tags = "健康检查")
     @GetMapping("/check-health")
     public String checkHealth() {
         return "ok";

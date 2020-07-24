@@ -49,7 +49,7 @@ public class SwaggerConfig {
     @Bean
     public Docket customDocket() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("ding dang api")
+                .groupName("api")
                 .enable(enable())
                 .apiInfo(apiInfo())
                 .select()
