@@ -3,6 +3,7 @@ package com.boot.common.web.validator;
 import com.boot.common.model.JSONResponse;
 import com.boot.common.web.enums.ExceptionCode;
 import com.boot.common.web.enums.UnifiedCode;
+import com.boot.common.web.exception.ServiceException;
 import com.boot.common.web.model.ExceptionInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -26,7 +27,23 @@ public class ControllerValidatorAdvice {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public JSONResponse<?> handleValidatedException(MethodArgumentNotValidException e) {
+        List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
+        List<ExceptionInfo> exceptions = new ArrayList<>();
+        for (FieldError error : fieldErrors) {
+            logger.error(error.getField() + ":" + error.getDefaultMessage());
+            ExceptionInfo info = new ExceptionInfo();
+            info.setParameterName(error.getField());
+            info.setInfo(error.getDefaultMessage());
+            logger.error("validate fail, parameterName: {}, msg: {}", error.getField(), error.getDefaultMessage());
+            exceptions.add(info);
+        }
+        ExceptionCode code = UnifiedCode.PARAMETER_ERROR;
+        return JSONResponse.create(code.getCode(), exceptions, code.getDescription());
+    }
+
+    @ExceptionHandler(BindException.class)
     public JSONResponse<?> handleValidatedException(BindException e) {
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
         List<ExceptionInfo> exceptions = new ArrayList<>();
@@ -42,7 +59,7 @@ public class ControllerValidatorAdvice {
         return JSONResponse.create(code.getCode(), exceptions, code.getDescription());
     }
 
-    @ExceptionHandler({ValidationException.class})
+    @ExceptionHandler({ValidationException.class, IllegalStateException.class})
     public JSONResponse<?> handleValidatedException(RuntimeException e) {
         String message = e.getMessage();
         List<ExceptionInfo> exceptions = new ArrayList<>();
@@ -63,4 +80,11 @@ public class ControllerValidatorAdvice {
         ExceptionCode code = UnifiedCode.PARAMETER_ERROR;
         return JSONResponse.create(code.getCode(), exceptions, code.getDescription());
     }
+
+    @ExceptionHandler(ServiceException.class)
+    public JSONResponse<?> serviceExceptionHandler(ServiceException e) {
+        logger.error("service exception occur = " + e.getMessage(), e);
+        return JSONResponse.error(e.getCode(), e.getMessage());
+    }
+
 }

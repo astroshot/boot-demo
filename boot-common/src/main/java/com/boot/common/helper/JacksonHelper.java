@@ -29,7 +29,7 @@ public abstract class JacksonHelper {
         transferMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         transferMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
         transferMapper.setDateFormat(new SimpleDateFormat(CommonConstant.DEFAULT_DATE_FORMAT));
-        transferMapper.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
+        transferMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
     }
 
     public static ObjectMapper getObjectMapper() {
