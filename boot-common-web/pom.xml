@@ -15,7 +15,21 @@
     <name>boot-common-web</name>
     <packaging>jar</packaging>
 
+    <properties>
+        <spring.boot.version>2.1.4.RELEASE</spring.boot.version>
+    </properties>
+
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
         <dependency>
             <groupId>com.boot</groupId>
             <artifactId>boot-common</artifactId>

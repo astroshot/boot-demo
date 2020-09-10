@@ -29,6 +29,16 @@ spring:
     username: root
     password:
     driver-class-name: com.mysql.jdbc.Driver
+  mail:
+    from: dev@example.com
+    to: receiver@example.com
+    cc:
+    title: Example Email
+    host: proxy.email-example.com
+    properties:
+      mail:
+        smtp:
+          timeout: 25000
 
 cache:
   active: local
