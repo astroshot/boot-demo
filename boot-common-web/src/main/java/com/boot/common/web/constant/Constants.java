@@ -24,4 +24,8 @@ public abstract class Constants {
 
     public static final String JSON_CONTENT = "application/json";
 
+    public static final String EXCEL_2003 = "application/vnd.ms-excel";
+
+    public static final String EXCEL_2007 = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
 }
