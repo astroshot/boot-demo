@@ -274,4 +274,67 @@
       updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <insert id="batchInsert" parameterType="java.util.List" >
+    insert into `user`
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      name,
+      email,
+      phone,
+      type,
+      status,
+      created_at,
+      updated_at,
+    </trim>
+     values 
+    <foreach collection="records" index="index" item="item" separator="," >
+      <trim prefix=" (" suffix=")" suffixOverrides="," >
+        #{item.id,jdbcType=BIGINT},
+        #{item.name,jdbcType=VARCHAR},
+        #{item.email,jdbcType=VARCHAR},
+        #{item.phone,jdbcType=VARCHAR},
+        #{item.type,jdbcType=TINYINT},
+        #{item.status,jdbcType=TINYINT},
+        #{item.createdAt,jdbcType=TIMESTAMP},
+        #{item.updatedAt,jdbcType=TIMESTAMP},
+      </trim>
+    </foreach>
+  </insert>
+  <insert id="batchInsertSelective" parameterType="map" >
+    insert into `user`
+    <foreach collection="columns" index="index" item="item" separator="," open="(" close=")" >
+      ${item}
+    </foreach>
+     values 
+    <foreach collection="records" index="index" item="record" separator="," >
+      <trim prefix=" (" suffix=")" suffixOverrides="," >
+        <foreach collection="columns" index="index" item="column" >
+          <if test="'id' == column" >
+            #{record.id,jdbcType=BIGINT},
+          </if>
+          <if test="'name' == column" >
+            #{record.name,jdbcType=VARCHAR},
+          </if>
+          <if test="'email' == column" >
+            #{record.email,jdbcType=VARCHAR},
+          </if>
+          <if test="'phone' == column" >
+            #{record.phone,jdbcType=VARCHAR},
+          </if>
+          <if test="'type' == column" >
+            #{record.type,jdbcType=TINYINT},
+          </if>
+          <if test="'status' == column" >
+            #{record.status,jdbcType=TINYINT},
+          </if>
+          <if test="'created_at' == column" >
+            #{record.createdAt,jdbcType=TIMESTAMP},
+          </if>
+          <if test="'updated_at' == column" >
+            #{record.updatedAt,jdbcType=TIMESTAMP},
+          </if>
+        </foreach>
+      </trim>
+    </foreach>
+  </insert>
 </mapper>

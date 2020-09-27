@@ -1,9 +1,10 @@
 package com.boot.dao.service.model;
 
+import com.boot.common.dao.model.BaseModel;
 import lombok.Data;
 
 @Data
-public class UserBO {
+public class UserBO extends BaseModel {
 
     private String name;
 
@@ -14,5 +15,7 @@ public class UserBO {
     private Integer status;
 
     private String description;
+
+    private Integer type;
 
 }

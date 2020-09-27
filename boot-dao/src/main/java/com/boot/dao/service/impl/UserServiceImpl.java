@@ -112,10 +112,13 @@ public class UserServiceImpl implements UserService {
             user.setStatus(item.getStatus());
             user.setCreatedAt(now);
             user.setUpdatedAt(now);
+            user.setType(item.getType());
 
             userList.add(user);
         }
 
-        return userCustomMapper.insertAll(userList);
+        // return userMapper.batchInsert(userList);
+        return userMapper.batchInsertSelective(userList, "name", "email", "phone", "status");
+        // return userCustomMapper.insertAll(userList);
     }
 }
