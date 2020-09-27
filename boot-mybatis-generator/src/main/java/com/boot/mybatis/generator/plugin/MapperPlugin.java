@@ -48,7 +48,7 @@ public class MapperPlugin extends CustomPluginAdapter {
         List<IntrospectedColumn> columns = introspectedTable.getAllColumns();
 
         List<String> columnNames = new ArrayList<>();
-        for (IntrospectedColumn item: columns) {
+        for (IntrospectedColumn item : columns) {
             columnNames.add(item.getActualColumnName());
         }
 
@@ -64,4 +64,5 @@ public class MapperPlugin extends CustomPluginAdapter {
 
         return super.clientGenerated(interfaze, topLevelClass, introspectedTable);
     }
+
 }

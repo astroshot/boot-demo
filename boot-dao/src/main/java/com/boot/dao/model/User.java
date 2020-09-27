@@ -2,7 +2,15 @@ package com.boot.dao.model;
 
 import com.boot.common.dao.model.BaseModel;
 import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
 
+@AllArgsConstructor
+@Getter
+@Data
+@Builder
 public class User extends BaseModel {
     private String name;
 
@@ -33,59 +41,18 @@ public class User extends BaseModel {
         super();
     }
 
-    public String getName() {
-        return name;
-    }
+    @AllArgsConstructor
+    public enum COLUMNS {
+        ID("id"),
+        NAME("name"),
+        EMAIL("email"),
+        PHONE("phone"),
+        TYPE("type"),
+        STATUS("status"),
+        CREATED_AT("created_at"),
+        UPDATED_AT("updated_at");
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email == null ? null : email.trim();
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone == null ? null : phone.trim();
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+        @Getter
+        private String column;
     }
 }

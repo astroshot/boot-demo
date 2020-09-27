@@ -28,11 +28,11 @@ public interface UserMapper {
 
     int updateByPrimaryKey(User record);
 
-    int batchInsert(@Param("records") List<User> records);
-
-    int batchInsertSelective(@Param("records") List<User> records, @Param("columns") String ... columns);
-
     public static final String COLUMNS = "id, name, email, phone, type, status, created_at, updated_at";
 
     public static final String TABLE_NAME = "user";
+
+    int batchInsert(@Param("records") List<User> records);
+
+    int batchInsertSelective(@Param("records") List<User> records, @Param("columns") String ... columns);
 }
