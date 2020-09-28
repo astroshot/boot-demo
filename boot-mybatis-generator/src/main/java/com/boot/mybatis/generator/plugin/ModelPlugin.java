@@ -131,6 +131,7 @@ public class ModelPlugin extends CustomPluginAdapter {
         annotations.add(Annotations.GETTER);
         annotations.add(Annotations.BUILDER);
         annotations.add(Annotations.ALL_ARGS_CONSTRUCTOR);
+        annotations.add(Annotations.NO_ARGS_CONSTRUCTOR);
         for (Map.Entry<Object, Object> entry : properties.entrySet()) {
             boolean isEnable = Boolean.parseBoolean(entry.getValue().toString());
             if (isEnable) {

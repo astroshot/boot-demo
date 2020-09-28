@@ -20,6 +20,7 @@
         <property name="beginningDelimiter" value="`"/>
         <property name="endingDelimiter" value="`"/>
 
+        <plugin type="com.boot.mybatis.generator.plugin.AutoDeleteSqlMapFilePlugin"/>
         <plugin type="com.boot.mybatis.generator.plugin.MapperPlugin"/>
         <plugin type="com.boot.mybatis.generator.plugin.PagerPlugin"/>
         <plugin type="com.boot.mybatis.generator.plugin.SuperClassPlugin">
