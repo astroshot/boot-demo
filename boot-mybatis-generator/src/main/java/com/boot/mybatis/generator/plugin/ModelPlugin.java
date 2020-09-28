@@ -112,12 +112,11 @@ public class ModelPlugin extends CustomPluginAdapter {
         columnField.setFinal(true);
         innerEnum.addField(columnField);
         introspectedTable.getAllColumns().forEach(introspectedColumn -> {
-            StringBuilder sb = new StringBuilder();
-            sb.append(introspectedColumn.getActualColumnName().toUpperCase());
-            sb.append("(\"");
-            sb.append(introspectedColumn.getActualColumnName());
-            sb.append("\")");
-            innerEnum.addEnumConstant(sb.toString());
+            String sb = introspectedColumn.getActualColumnName().toUpperCase() +
+                    "(\"" +
+                    introspectedColumn.getActualColumnName() +
+                    "\")";
+            innerEnum.addEnumConstant(sb);
         });
         innerEnum.addAnnotation(Annotations.ALL_ARGS_CONSTRUCTOR.getName());
         topLevelClass.addInnerEnum(innerEnum);
@@ -131,7 +130,7 @@ public class ModelPlugin extends CustomPluginAdapter {
         annotations.add(Annotations.GETTER);
         annotations.add(Annotations.BUILDER);
         annotations.add(Annotations.ALL_ARGS_CONSTRUCTOR);
-        annotations.add(Annotations.NO_ARGS_CONSTRUCTOR);
+        // annotations.add(Annotations.NO_ARGS_CONSTRUCTOR);
         for (Map.Entry<Object, Object> entry : properties.entrySet()) {
             boolean isEnable = Boolean.parseBoolean(entry.getValue().toString());
             if (isEnable) {
