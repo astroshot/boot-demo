@@ -53,6 +53,6 @@ public class User extends BaseModel {
         UPDATED_AT("updated_at");
 
         @Getter
-        private String column;
+        private final String column;
     }
 }

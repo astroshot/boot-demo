@@ -118,7 +118,19 @@ public class UserServiceImpl implements UserService {
         }
 
         // return userMapper.batchInsert(userList);
-        return userMapper.batchInsertSelective(userList, "name", "email", "phone", "status");
+        return userMapper.batchInsertSelective(userList,
+                User.COLUMNS.NAME.getColumn(), User.COLUMNS.EMAIL.getColumn(),
+                User.COLUMNS.EMAIL.getColumn(), User.COLUMNS.STATUS.getColumn());
         // return userCustomMapper.insertAll(userList);
+    }
+
+    @Override
+    public int insertOrUpdateOnDuplicatePhone(User user) {
+        if (user == null) {
+            return 0;
+        }
+
+        return userMapper.insertOrUpdateSelectiveOnDuplicateKey(user,
+                User.COLUMNS.NAME.getColumn(), User.COLUMNS.EMAIL.getColumn(), User.COLUMNS.STATUS.getColumn());
     }
 }

@@ -16,4 +16,6 @@ public interface UserService {
     boolean saveAll(List<UserBO> users);
 
     int insertAll(List<UserBO> users);
+
+    int insertOrUpdateOnDuplicatePhone(User user);
 }

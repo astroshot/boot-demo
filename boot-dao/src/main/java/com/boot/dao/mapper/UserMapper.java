@@ -35,4 +35,8 @@ public interface UserMapper {
     int batchInsert(@Param("records") List<User> records);
 
     int batchInsertSelective(@Param("records") List<User> records, @Param("columns") String ... columns);
+
+    int insertOrUpdateOnDuplicateKey(@Param("record") User record, @Param("columns") String ... columns);
+
+    int insertOrUpdateSelectiveOnDuplicateKey(@Param("record") User record, @Param("columns") String ... columns);
 }

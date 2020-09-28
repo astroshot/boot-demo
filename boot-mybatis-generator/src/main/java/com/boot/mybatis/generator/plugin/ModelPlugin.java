@@ -109,6 +109,7 @@ public class ModelPlugin extends CustomPluginAdapter {
         Field columnField = new Field("column", FullyQualifiedJavaType.getStringInstance());
         columnField.setVisibility(JavaVisibility.PRIVATE);
         columnField.addAnnotation(Annotations.GETTER.getName());
+        columnField.setFinal(true);
         innerEnum.addField(columnField);
         introspectedTable.getAllColumns().forEach(introspectedColumn -> {
             StringBuilder sb = new StringBuilder();

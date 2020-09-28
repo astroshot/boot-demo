@@ -63,4 +63,10 @@ public class UserController extends BaseController {
         int res = userService.insertAll(users);
         return JSONResponse.create(0, res > 0, "");
     }
+
+    @PostMapping("/update/phone")
+    JSONResponse<?> updatePhone(@RequestBody(required = false) @Valid User user) {
+        int res = userService.insertOrUpdateOnDuplicatePhone(user);
+        return JSONResponse.success(res > 0);
+    }
 }

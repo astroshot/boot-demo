@@ -337,4 +337,134 @@
       </trim>
     </foreach>
   </insert>
+  <insert id="insertOrUpdateOnDuplicateKey" parameterType="map" >
+    insert into `user`
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      `name`,
+      `email`,
+      `phone`,
+      `type`,
+      `status`,
+      `created_at`,
+      `updated_at`,
+    </trim>
+     values 
+    <trim prefix=" (" suffix=")" suffixOverrides="," >
+      #{record.name,jdbcType=VARCHAR},
+      #{record.email,jdbcType=VARCHAR},
+      #{record.phone,jdbcType=VARCHAR},
+      #{record.type,jdbcType=TINYINT},
+      #{record.status,jdbcType=TINYINT},
+      #{record.createdAt,jdbcType=TIMESTAMP},
+      #{record.updatedAt,jdbcType=TIMESTAMP},
+    </trim>
+     on duplicate key update 
+    <trim suffixOverrides="," >
+      <foreach collection="columns" index="index" item="column" >
+        <if test="'id' == column" >
+          `id` = #{record.id}, 
+        </if>
+        <if test="'name' == column" >
+          `name` = #{record.name}, 
+        </if>
+        <if test="'email' == column" >
+          `email` = #{record.email}, 
+        </if>
+        <if test="'phone' == column" >
+          `phone` = #{record.phone}, 
+        </if>
+        <if test="'type' == column" >
+          `type` = #{record.type}, 
+        </if>
+        <if test="'status' == column" >
+          `status` = #{record.status}, 
+        </if>
+        <if test="'created_at' == column" >
+          `created_at` = #{record.createdAt}, 
+        </if>
+        <if test="'updated_at' == column" >
+          `updated_at` = #{record.updatedAt}, 
+        </if>
+      </foreach>
+    </trim>
+  </insert>
+  <insert id="insertOrUpdateSelectiveOnDuplicateKey" parameterType="map" >
+    insert into `user`
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="record.name != null" >
+        `name`,
+      </if>
+      <if test="record.email != null" >
+        `email`,
+      </if>
+      <if test="record.phone != null" >
+        `phone`,
+      </if>
+      <if test="record.type != null" >
+        `type`,
+      </if>
+      <if test="record.status != null" >
+        `status`,
+      </if>
+      <if test="record.createdAt != null" >
+        `created_at`,
+      </if>
+      <if test="record.updatedAt != null" >
+        `updated_at`,
+      </if>
+    </trim>
+     values 
+    <trim prefix=" (" suffix=")" suffixOverrides="," >
+      <if test="record.name != null" >
+        #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null" >
+        #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phone != null" >
+        #{record.phone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null" >
+        #{record.type,jdbcType=TINYINT},
+      </if>
+      <if test="record.status != null" >
+        #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.createdAt != null" >
+        #{record.createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updatedAt != null" >
+        #{record.updatedAt,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+     on duplicate key update 
+    <trim suffixOverrides="," >
+      <foreach collection="columns" index="index" item="column" >
+        <if test="'id' == column" >
+          `id` = #{record.id}, 
+        </if>
+        <if test="'name' == column" >
+          `name` = #{record.name}, 
+        </if>
+        <if test="'email' == column" >
+          `email` = #{record.email}, 
+        </if>
+        <if test="'phone' == column" >
+          `phone` = #{record.phone}, 
+        </if>
+        <if test="'type' == column" >
+          `type` = #{record.type}, 
+        </if>
+        <if test="'status' == column" >
+          `status` = #{record.status}, 
+        </if>
+        <if test="'created_at' == column" >
+          `created_at` = #{record.createdAt}, 
+        </if>
+        <if test="'updated_at' == column" >
+          `updated_at` = #{record.updatedAt}, 
+        </if>
+      </foreach>
+    </trim>
+  </insert>
 </mapper>
