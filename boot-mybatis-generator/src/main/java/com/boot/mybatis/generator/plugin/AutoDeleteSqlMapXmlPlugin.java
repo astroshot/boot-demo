@@ -7,7 +7,7 @@ import org.mybatis.generator.api.IntrospectedTable;
 import java.io.File;
 import java.util.List;
 
-public class AutoDeleteSqlMapFilePlugin extends CustomPluginAdapter {
+public class AutoDeleteSqlMapXmlPlugin extends CustomPluginAdapter {
 
     @Override
     public boolean validate(List<String> warnings) {
@@ -16,12 +16,16 @@ public class AutoDeleteSqlMapFilePlugin extends CustomPluginAdapter {
 
     @Override
     public boolean sqlMapGenerated(GeneratedXmlFile sqlMap, IntrospectedTable introspectedTable) {
-        String sqlMapPath = sqlMap.getTargetProject() +
-                File.separator +
-                sqlMap.getTargetPackage().replaceAll("\\.", File.separator) +
-                File.separator + sqlMap.getFileName();
+        String sqlMapPath = sqlMap.getTargetProject()
+                + File.separator
+                + sqlMap.getTargetPackage().replaceAll("\\.", File.separator)
+                + File.separator + sqlMap.getFileName();
         File sqlMapFile = new File(sqlMapPath);
-        sqlMapFile.delete();
+        try {
+            boolean res = sqlMapFile.delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return true;
     }
 

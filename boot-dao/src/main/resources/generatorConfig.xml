@@ -20,7 +20,7 @@
         <property name="beginningDelimiter" value="`"/>
         <property name="endingDelimiter" value="`"/>
 
-        <plugin type="com.boot.mybatis.generator.plugin.AutoDeleteSqlMapFilePlugin"/>
+        <plugin type="com.boot.mybatis.generator.plugin.AutoDeleteSqlMapXmlPlugin"/>
         <plugin type="com.boot.mybatis.generator.plugin.MapperPlugin"/>
         <plugin type="com.boot.mybatis.generator.plugin.PagerPlugin"/>
         <plugin type="com.boot.mybatis.generator.plugin.SuperClassPlugin">
@@ -84,7 +84,7 @@
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
-        <!-- add your table here -->
+        <!-- add your tables here -->
         <!--delimitIdentifiers=true 给表名加反引号-->
         <table tableName="user" domainObjectName="User" delimitIdentifiers="true">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
