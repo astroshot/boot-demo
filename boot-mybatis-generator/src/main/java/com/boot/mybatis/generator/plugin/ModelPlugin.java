@@ -130,7 +130,7 @@ public class ModelPlugin extends CustomPluginAdapter {
         annotations.add(LombokAnnotation.GETTER);
         annotations.add(LombokAnnotation.BUILDER);
         annotations.add(LombokAnnotation.ALL_ARGS_CONSTRUCTOR);
-        // annotations.add(Annotations.NO_ARGS_CONSTRUCTOR);
+        annotations.add(LombokAnnotation.NO_ARGS_CONSTRUCTOR);
         for (Map.Entry<Object, Object> entry : properties.entrySet()) {
             boolean isEnable = Boolean.parseBoolean(entry.getValue().toString());
             if (isEnable) {
