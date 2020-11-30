@@ -50,7 +50,7 @@ public class BatchInsertionPlugin extends CustomPluginAdapter {
         FullyQualifiedJavaType paramType = FullyQualifiedJavaType.getNewListInstance();
         FullyQualifiedJavaType paramListType = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
         paramType.addTypeArgument(paramListType);
-        batchInsertMethod.addParameter(new Parameter(paramType, "records", "@Param(\"records\")"));
+        batchInsertMethod.addParameter(new Parameter(paramType, "list", "@Param(\"list\")"));
         interfaze.addImportedTypes(importedTypes);
         interfaze.addMethod(batchInsertMethod);
 
@@ -62,7 +62,7 @@ public class BatchInsertionPlugin extends CustomPluginAdapter {
         FullyQualifiedJavaType paramTypeSelective = FullyQualifiedJavaType.getNewListInstance();
         FullyQualifiedJavaType paramListTypeSelective = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
         paramTypeSelective.addTypeArgument(paramListTypeSelective);
-        batchInsertSelectiveMethod.addParameter(new Parameter(paramTypeSelective, "records", "@Param(\"records\")"));
+        batchInsertSelectiveMethod.addParameter(new Parameter(paramTypeSelective, "list", "@Param(\"list\")"));
         batchInsertSelectiveMethod.addParameter(new Parameter(FullyQualifiedJavaType.getStringInstance(), "columns", "@Param(\"columns\")", true));
         interfaze.addImportedTypes(importedTypes);
         interfaze.addMethod(batchInsertSelectiveMethod);
@@ -81,6 +81,9 @@ public class BatchInsertionPlugin extends CustomPluginAdapter {
     private void addBatchInsertionXml(Document document, IntrospectedTable introspectedTable) {
         XmlElement insertBatchElement = new XmlElement("insert");
         insertBatchElement.addAttribute(new Attribute("id", "batchInsert"));
+        // 批量插入数据同步返回数据的自增 id，需要 mybatis 版本号不能低于 3.3.1
+        insertBatchElement.addAttribute(new Attribute("useGeneratedKeys", "true"));
+        insertBatchElement.addAttribute(new Attribute("keyProperty", "id"));
         insertBatchElement.addAttribute(new Attribute("parameterType", "java.util.List"));
         XmlElement valueTrimElement = new XmlElement("trim");
         valueTrimElement.addAttribute(new Attribute("prefix", " ("));
@@ -102,7 +105,7 @@ public class BatchInsertionPlugin extends CustomPluginAdapter {
                             + "},"));
         }
         XmlElement foreachElement = new XmlElement("foreach");
-        foreachElement.addAttribute(new Attribute("collection", "records"));
+        foreachElement.addAttribute(new Attribute("collection", "list"));
         foreachElement.addAttribute(new Attribute("index", "index"));
         foreachElement.addAttribute(new Attribute("item", "item"));
         foreachElement.addAttribute(new Attribute("separator", ","));
@@ -118,6 +121,8 @@ public class BatchInsertionPlugin extends CustomPluginAdapter {
         XmlElement insertBatchElement = new XmlElement("insert");
         insertBatchElement.addAttribute(new Attribute("id", "batchInsertSelective"));
         insertBatchElement.addAttribute(new Attribute("parameterType", "map"));
+        insertBatchElement.addAttribute(new Attribute("useGeneratedKeys", "true"));
+        insertBatchElement.addAttribute(new Attribute("keyProperty", "id"));
         XmlElement foreachColumn = new XmlElement("foreach");
         foreachColumn.addAttribute(new Attribute("collection", "columns"));
         foreachColumn.addAttribute(new Attribute("index", "index"));
@@ -154,7 +159,7 @@ public class BatchInsertionPlugin extends CustomPluginAdapter {
         }
         valueTrimElement.addElement(foreachColumnForValue);
         XmlElement foreachElement = new XmlElement("foreach");
-        foreachElement.addAttribute(new Attribute("collection", "records"));
+        foreachElement.addAttribute(new Attribute("collection", "list"));
         foreachElement.addAttribute(new Attribute("index", "index"));
         foreachElement.addAttribute(new Attribute("item", "record"));
         foreachElement.addAttribute(new Attribute("separator", ","));
