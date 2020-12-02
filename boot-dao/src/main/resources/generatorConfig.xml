@@ -28,6 +28,7 @@
             <property name="superClass" value="com.boot.common.dao.model.BaseModel"/>
         </plugin>
         <plugin type="com.boot.mybatis.generator.plugin.ModelPlugin"/>
+        <plugin type="com.boot.mybatis.generator.plugin.SwaggerAnnotationPlugin"/>
         <plugin type="com.boot.mybatis.generator.plugin.BatchInsertionPlugin"/>
         <plugin type="com.boot.mybatis.generator.plugin.InsertOrUpdateOnDuplicateKeyPlugin"/>
         <plugin type="com.boot.mybatis.generator.plugin.InsertOrUpdateSelectiveOnDuplicateKeyPlugin"/>
