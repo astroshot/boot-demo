@@ -32,9 +32,9 @@ public interface UserMapper {
 
     public static final String TABLE_NAME = "user";
 
-    int batchInsert(@Param("records") List<User> records);
+    int batchInsert(@Param("list") List<User> list);
 
-    int batchInsertSelective(@Param("records") List<User> records, @Param("columns") String ... columns);
+    int batchInsertSelective(@Param("list") List<User> list, @Param("columns") String ... columns);
 
     int insertOrUpdateOnDuplicateKey(@Param("record") User record, @Param("columns") String ... columns);
 

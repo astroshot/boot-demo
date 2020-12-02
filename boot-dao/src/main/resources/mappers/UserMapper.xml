@@ -272,7 +272,7 @@
       updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <insert id="batchInsert" parameterType="java.util.List" >
+  <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List" >
     insert into `user`
     <trim prefix="(" suffix=")" suffixOverrides="," >
       id,
@@ -285,7 +285,7 @@
       updated_at,
     </trim>
      values 
-    <foreach collection="records" index="index" item="item" separator="," >
+    <foreach collection="list" index="index" item="item" separator="," >
       <trim prefix=" (" suffix=")" suffixOverrides="," >
         #{item.id,jdbcType=BIGINT},
         #{item.name,jdbcType=VARCHAR},
@@ -298,13 +298,13 @@
       </trim>
     </foreach>
   </insert>
-  <insert id="batchInsertSelective" parameterType="map" >
+  <insert id="batchInsertSelective" parameterType="map" useGeneratedKeys="true" keyProperty="id" >
     insert into `user`
     <foreach collection="columns" index="index" item="item" separator="," open="(" close=")" >
       ${item}
     </foreach>
      values 
-    <foreach collection="records" index="index" item="record" separator="," >
+    <foreach collection="list" index="index" item="record" separator="," >
       <trim prefix=" (" suffix=")" suffixOverrides="," >
         <foreach collection="columns" index="index" item="column" >
           <if test="'id' == column" >
