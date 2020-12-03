@@ -9,17 +9,9 @@ import org.mybatis.generator.api.dom.java.Field;
 import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 public class SwaggerAnnotationPlugin extends CustomPluginAdapter {
-
-    private final Collection<SwaggerAnnotation> annotations;
-
-    public SwaggerAnnotationPlugin() {
-        annotations = new HashSet<SwaggerAnnotation>(SwaggerAnnotation.values().length);
-    }
 
     @Override
     public boolean validate(List<String> list) {
@@ -83,13 +75,17 @@ public class SwaggerAnnotationPlugin extends CustomPluginAdapter {
     }
 
     private void addApiModelAnnotation(TopLevelClass topLevelClass) {
+        // Class Annotation format: @ApiModel
         topLevelClass.addImportedType(SwaggerAnnotation.API_MODEL.getJavaType());
         topLevelClass.addImportedType(SwaggerAnnotation.API_MODEL_PROPERTY.getJavaType());
         topLevelClass.addAnnotation(SwaggerAnnotation.API_MODEL.getName());
     }
 
-    public void addFieldAnnotation(Field field, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn) {
-        String annotation = String.format("%s(value = \"%s\")", SwaggerAnnotation.API_MODEL_PROPERTY.getName(), introspectedColumn.getRemarks());
+    public void addFieldAnnotation(
+            Field field, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn) {
+        // Field Annotation format: @ApiModelProperty(value = "Comments from mysql schema")
+        String annotation = String.format(
+                "%s(value = \"%s\")", SwaggerAnnotation.API_MODEL_PROPERTY.getName(), introspectedColumn.getRemarks());
         field.addAnnotation(annotation);
     }
 
