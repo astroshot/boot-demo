@@ -7,7 +7,7 @@
         </encoder>
     </appender>
     <root>
-        <level value="DEBUG" />
+        <level value="INFO" />
         <appender-ref ref="STOUT" />
     </root>
 </configuration>
