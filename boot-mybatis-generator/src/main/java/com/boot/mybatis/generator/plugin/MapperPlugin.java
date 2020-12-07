@@ -1,7 +1,7 @@
 package com.boot.mybatis.generator.plugin;
 
 import com.boot.mybatis.generator.api.InterfaceExtendedProperty;
-import com.boot.mybatis.generator.plugin.adapter.CustomPluginAdapter;
+import com.boot.mybatis.generator.plugin.adapter.EnhancedPluginAdapter;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.Interface;
@@ -10,7 +10,7 @@ import org.mybatis.generator.api.dom.java.TopLevelClass;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapperPlugin extends CustomPluginAdapter {
+public class MapperPlugin extends EnhancedPluginAdapter {
 
     @Override
     public boolean validate(List<String> list) {

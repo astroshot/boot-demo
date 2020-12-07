@@ -1,7 +1,7 @@
 package com.boot.mybatis.generator.plugin;
 
 import com.boot.mybatis.generator.enums.LombokAnnotation;
-import com.boot.mybatis.generator.plugin.adapter.CustomPluginAdapter;
+import com.boot.mybatis.generator.plugin.adapter.EnhancedPluginAdapter;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.Field;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class ModelPlugin extends CustomPluginAdapter {
+public class ModelPlugin extends EnhancedPluginAdapter {
 
     private final Collection<LombokAnnotation> annotations;
 

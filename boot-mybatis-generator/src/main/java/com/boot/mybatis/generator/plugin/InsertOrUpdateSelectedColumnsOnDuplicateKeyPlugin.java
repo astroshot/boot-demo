@@ -1,6 +1,6 @@
 package com.boot.mybatis.generator.plugin;
 
-import com.boot.mybatis.generator.plugin.adapter.CustomPluginAdapter;
+import com.boot.mybatis.generator.plugin.adapter.EnhancedPluginAdapter;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class InsertOrUpdateSelectiveOnDuplicateKeyPlugin extends CustomPluginAdapter {
+public class InsertOrUpdateSelectedColumnsOnDuplicateKeyPlugin extends EnhancedPluginAdapter {
 
     private static final String METHOD_NAME = "insertOrUpdateSelectiveOnDuplicateKey";
 

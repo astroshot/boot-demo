@@ -1,7 +1,7 @@
 package com.boot.mybatis.generator.plugin;
 
 import com.boot.mybatis.generator.enums.SwaggerAnnotation;
-import com.boot.mybatis.generator.plugin.adapter.CustomPluginAdapter;
+import com.boot.mybatis.generator.plugin.adapter.EnhancedPluginAdapter;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.Plugin;
@@ -11,7 +11,7 @@ import org.mybatis.generator.api.dom.java.TopLevelClass;
 
 import java.util.List;
 
-public class SwaggerAnnotationPlugin extends CustomPluginAdapter {
+public class SwaggerAnnotationPlugin extends EnhancedPluginAdapter {
 
     @Override
     public boolean validate(List<String> list) {

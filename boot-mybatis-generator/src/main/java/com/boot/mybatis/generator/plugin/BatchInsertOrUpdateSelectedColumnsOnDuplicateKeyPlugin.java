@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class InsertOrUpdateOnDuplicateKeyPlugin extends EnhancedPluginAdapter {
+public class BatchInsertOrUpdateSelectedColumnsOnDuplicateKeyPlugin extends EnhancedPluginAdapter {
 
-    private static final String METHOD_NAME = "insertOrUpdateOnDuplicateKey";
+    private static final String METHOD_NAME = "batchInsertOrUpdateSelectedColumnsOnDuplicateKey";
 
     @Override
     public boolean validate(List<String> list) {
@@ -41,7 +41,7 @@ public class InsertOrUpdateOnDuplicateKeyPlugin extends EnhancedPluginAdapter {
 
     protected void addInsertOnDuplicateKeyMethod(Interface interfaze, IntrospectedTable introspectedTable) {
         // import necessary classes
-        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         importedTypes.add(FullyQualifiedJavaType.getNewListInstance());
         importedTypes.add(introspectedTable.getRules().calculateAllFieldsClass());
         FullyQualifiedJavaType returnType = FullyQualifiedJavaType.getIntInstance();
@@ -55,8 +55,10 @@ public class InsertOrUpdateOnDuplicateKeyPlugin extends EnhancedPluginAdapter {
         // set method name
         insertOrUpdateOnDuplicateKeyMethod.setName(METHOD_NAME);
         // set parameters
-        FullyQualifiedJavaType paramType = introspectedTable.getRules().calculateAllFieldsClass();
-        insertOrUpdateOnDuplicateKeyMethod.addParameter(new Parameter(paramType, "record", "@Param(\"record\")"));
+        FullyQualifiedJavaType paramTypeSelective = FullyQualifiedJavaType.getNewListInstance();
+        FullyQualifiedJavaType paramListTypeSelective = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
+        paramTypeSelective.addTypeArgument(paramListTypeSelective);
+        insertOrUpdateOnDuplicateKeyMethod.addParameter(new Parameter(paramTypeSelective, "list", "@Param(\"list\")"));
         insertOrUpdateOnDuplicateKeyMethod.addParameter(
                 new Parameter(FullyQualifiedJavaType.getStringInstance(), "columns", "@Param(\"columns\")", true));
         interfaze.addImportedTypes(importedTypes);
@@ -66,6 +68,8 @@ public class InsertOrUpdateOnDuplicateKeyPlugin extends EnhancedPluginAdapter {
     protected void addInsertOnDuplicateKeyXml(Document document, IntrospectedTable introspectedTable) {
         XmlElement insertOnDuplicateKey = new XmlElement("insert");
         insertOnDuplicateKey.addAttribute(new Attribute("id", METHOD_NAME));
+        insertOnDuplicateKey.addAttribute(new Attribute("useGeneratedKeys", "true"));
+        insertOnDuplicateKey.addAttribute(new Attribute("keyProperty", "id"));
         insertOnDuplicateKey.addAttribute(new Attribute("parameterType", "map"));
 
         insertOnDuplicateKey.addElement(
@@ -88,18 +92,34 @@ public class InsertOrUpdateOnDuplicateKeyPlugin extends EnhancedPluginAdapter {
             if ("id".equals(columnName)) {
                 continue;
             }
-            columnTrimElement.addElement(new TextElement("`" + columnName + "`" + ","));
-            valueTrimElement.addElement(
+
+            XmlElement checkColumn = new XmlElement("if");
+            String testCondition = "record." + introspectedColumn.getJavaProperty() + " != null";
+            checkColumn.addAttribute(new Attribute("test", testCondition));
+            checkColumn.addElement(new TextElement("`" + columnName + "`" + ","));
+            columnTrimElement.addElement(checkColumn);
+
+            XmlElement checkColumnValue = new XmlElement("if");
+            checkColumnValue.addAttribute(new Attribute("test", testCondition));
+            checkColumnValue.addElement(
                     new TextElement("#{record."
                             + introspectedColumn.getJavaProperty()
                             + ",jdbcType="
                             + introspectedColumn.getJdbcTypeName()
                             + "},"));
+            valueTrimElement.addElement(checkColumnValue);
         }
 
+        XmlElement foreachElement = new XmlElement("foreach");
+        foreachElement.addAttribute(new Attribute("collection", "list"));
+        foreachElement.addAttribute(new Attribute("index", "index"));
+        foreachElement.addAttribute(new Attribute("item", "item"));
+        foreachElement.addAttribute(new Attribute("separator", ","));
+
         insertOnDuplicateKey.addElement(columnTrimElement);
-        insertOnDuplicateKey.addElement(new TextElement(" values "));
-        insertOnDuplicateKey.addElement(valueTrimElement);
+        insertOnDuplicateKey.addElement(new TextElement(" values"));
+        foreachElement.addElement(valueTrimElement);
+        insertOnDuplicateKey.addElement(foreachElement);
         insertOnDuplicateKey.addElement(new TextElement(" on duplicate key update "));
 
         XmlElement updateColumnTrimElement = new XmlElement("trim");

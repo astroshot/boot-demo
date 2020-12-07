@@ -1,6 +1,6 @@
 package com.boot.mybatis.generator.plugin;
 
-import com.boot.mybatis.generator.plugin.adapter.CustomPluginAdapter;
+import com.boot.mybatis.generator.plugin.adapter.EnhancedPluginAdapter;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.Field;
@@ -11,7 +11,7 @@ import org.mybatis.generator.api.dom.java.TopLevelClass;
 import java.util.List;
 import java.util.Properties;
 
-public class SuperClassPlugin extends CustomPluginAdapter {
+public class SuperClassPlugin extends EnhancedPluginAdapter {
 
     private FullyQualifiedJavaType superClass;
     private boolean addSuperClass;

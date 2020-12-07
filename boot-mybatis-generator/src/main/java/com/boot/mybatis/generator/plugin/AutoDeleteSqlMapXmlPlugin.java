@@ -1,13 +1,13 @@
 package com.boot.mybatis.generator.plugin;
 
-import com.boot.mybatis.generator.plugin.adapter.CustomPluginAdapter;
+import com.boot.mybatis.generator.plugin.adapter.EnhancedPluginAdapter;
 import org.mybatis.generator.api.GeneratedXmlFile;
 import org.mybatis.generator.api.IntrospectedTable;
 
 import java.io.File;
 import java.util.List;
 
-public class AutoDeleteSqlMapXmlPlugin extends CustomPluginAdapter {
+public class AutoDeleteSqlMapXmlPlugin extends EnhancedPluginAdapter {
 
     @Override
     public boolean validate(List<String> warnings) {

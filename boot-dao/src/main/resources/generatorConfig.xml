@@ -31,7 +31,8 @@
         <plugin type="com.boot.mybatis.generator.plugin.SwaggerAnnotationPlugin"/>
         <plugin type="com.boot.mybatis.generator.plugin.BatchInsertionPlugin"/>
         <plugin type="com.boot.mybatis.generator.plugin.InsertOrUpdateOnDuplicateKeyPlugin"/>
-        <plugin type="com.boot.mybatis.generator.plugin.InsertOrUpdateSelectiveOnDuplicateKeyPlugin"/>
+        <plugin type="com.boot.mybatis.generator.plugin.InsertOrUpdateSelectedColumnsOnDuplicateKeyPlugin"/>
+        <plugin type="com.boot.mybatis.generator.plugin.BatchInsertOrUpdateSelectedColumnsOnDuplicateKeyPlugin"/>
 
         <!-- optional，旨在创建class时，对注释进行控制 -->
         <commentGenerator>

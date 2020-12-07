@@ -1,6 +1,6 @@
 package com.boot.mybatis.generator.plugin;
 
-import com.boot.mybatis.generator.plugin.adapter.CustomPluginAdapter;
+import com.boot.mybatis.generator.plugin.adapter.EnhancedPluginAdapter;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.Field;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
@@ -15,7 +15,7 @@ import org.mybatis.generator.api.dom.xml.XmlElement;
 
 import java.util.List;
 
-public class PagerPlugin extends CustomPluginAdapter {
+public class PagerPlugin extends EnhancedPluginAdapter {
 
     @Override
     public boolean validate(List<String> list) {
