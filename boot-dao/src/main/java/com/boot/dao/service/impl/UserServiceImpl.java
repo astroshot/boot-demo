@@ -8,9 +8,9 @@ import com.boot.dao.model.UserExample;
 import com.boot.dao.service.UserService;
 import com.boot.dao.service.model.UserBO;
 import com.boot.dao.service.model.UserQueryBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -133,4 +133,16 @@ public class UserServiceImpl implements UserService {
         return userMapper.insertOrUpdateSelectiveOnDuplicateKey(user,
                 User.COLUMNS.NAME.getColumn(), User.COLUMNS.EMAIL.getColumn(), User.COLUMNS.STATUS.getColumn());
     }
+
+    @Override
+    public int batchInsertOrUpdateSelectedColumnsOnDupKey(List<User> users, List<String> insertionColumns, List<String> updateColumns) {
+        if (CollectionUtils.isEmpty(users)) {
+            return 0;
+        }
+
+        Date now = new Date();
+        users.forEach(u -> u.setUpdatedAt(now));
+        return userMapper.batchInsertOrUpdateSelectedColumnsOnDuplicateKey(users, insertionColumns, updateColumns);
+    }
+
 }
