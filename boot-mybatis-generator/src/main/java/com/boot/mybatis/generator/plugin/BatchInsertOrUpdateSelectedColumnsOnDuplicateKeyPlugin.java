@@ -67,7 +67,7 @@ public class BatchInsertOrUpdateSelectedColumnsOnDuplicateKeyPlugin extends Enha
         insertOrUpdateOnDuplicateKeyMethod.addParameter(
                 new Parameter(insertionColumnType, "insertionColumns", "@Param(\"insertionColumns\")"));
         insertOrUpdateOnDuplicateKeyMethod.addParameter(
-                new Parameter(insertionColumnType, "updateColumns", "@Param(\"updateColumns\")"));
+                new Parameter(insertionColumnType, "updatingColumns", "@Param(\"updatingColumns\")"));
         interfaze.addImportedTypes(importedTypes);
         interfaze.addMethod(insertOrUpdateOnDuplicateKeyMethod);
     }
@@ -130,7 +130,7 @@ public class BatchInsertOrUpdateSelectedColumnsOnDuplicateKeyPlugin extends Enha
         XmlElement updateColumnTrimElement = new XmlElement("trim");
         updateColumnTrimElement.addAttribute(new Attribute("suffixOverrides", ","));
         XmlElement foreachUpdateColumn = new XmlElement("foreach");
-        foreachUpdateColumn.addAttribute(new Attribute("collection", "updateColumns"));
+        foreachUpdateColumn.addAttribute(new Attribute("collection", "updatingColumns"));
         foreachUpdateColumn.addAttribute(new Attribute("index", "index"));
         foreachUpdateColumn.addAttribute(new Attribute("item", "column"));
         List<IntrospectedColumn> onUpdateColumns = introspectedTable.getAllColumns();
