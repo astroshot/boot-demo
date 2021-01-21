@@ -18,4 +18,6 @@ public interface UserService {
     int insertAll(List<UserBO> users);
 
     int insertOrUpdateOnDuplicatePhone(User user);
+
+    int batchInsertOrUpdateSelectedColumnsOnDupKey(List<User> users, List<String> insertionColumns, List<String> updateColumns);
 }

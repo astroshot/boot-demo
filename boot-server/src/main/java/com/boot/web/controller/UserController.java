@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -55,13 +58,24 @@ public class UserController extends BaseController {
     }
 
     @PostMapping("/all-users")
-    public JSONResponse<?> saveAllUsers(@RequestBody(required = false) List<UserBO> users) {
+    public JSONResponse<?> saveAllUsers(@RequestBody(required = false) List<User> users) {
         if (CollectionUtils.isEmpty(users)) {
             return JSONResponse.success("users 为空");
         }
 
-        int res = userService.insertAll(users);
-        return JSONResponse.create(0, res > 0, "");
+        Date now = new Date();
+        users.forEach(u -> u.setCreatedAt(now));
+        List<String> insertionCols = Arrays.asList(User.COLUMNS.NAME.getColumn(),
+                User.COLUMNS.PHONE.getColumn(),
+                User.COLUMNS.EMAIL.getColumn(),
+                User.COLUMNS.CREATED_AT.getColumn(),
+                User.COLUMNS.UPDATED_AT.getColumn());
+        List<String> updatingCols = Arrays.asList(
+                User.COLUMNS.NAME.getColumn(),
+                User.COLUMNS.EMAIL.getColumn(),
+                User.COLUMNS.UPDATED_AT.getColumn());
+        int res = userService.batchInsertOrUpdateSelectedColumnsOnDupKey(users, insertionCols, updatingCols);
+        return JSONResponse.create(0, users, "");
     }
 
     @PostMapping("/update/phone")

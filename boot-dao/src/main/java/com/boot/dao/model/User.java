@@ -10,11 +10,11 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Data
+@Builder
 @Getter
+@AllArgsConstructor
 @ApiModel
 public class User extends BaseModel {
     @ApiModelProperty(value = "user name")

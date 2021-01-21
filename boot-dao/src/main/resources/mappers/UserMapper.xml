@@ -465,4 +465,70 @@
       </foreach>
     </trim>
   </insert>
+  <insert id="batchInsertOrUpdateSelectedColumnsOnDuplicateKey" useGeneratedKeys="true" keyProperty="id" parameterType="map" >
+    insert into `user`
+    <foreach collection="insertionColumns" index="index" item="item" separator="," open="(" close=")" >
+      ${item}
+    </foreach>
+     values
+    <foreach collection="list" index="index" item="record" separator="," >
+      <trim prefix=" (" suffix=")" suffixOverrides="," >
+        <foreach collection="insertionColumns" index="index" item="column" >
+          <if test="'id' == column" >
+            #{record.id,jdbcType=BIGINT},
+          </if>
+          <if test="'name' == column" >
+            #{record.name,jdbcType=VARCHAR},
+          </if>
+          <if test="'email' == column" >
+            #{record.email,jdbcType=VARCHAR},
+          </if>
+          <if test="'phone' == column" >
+            #{record.phone,jdbcType=VARCHAR},
+          </if>
+          <if test="'type' == column" >
+            #{record.type,jdbcType=TINYINT},
+          </if>
+          <if test="'status' == column" >
+            #{record.status,jdbcType=TINYINT},
+          </if>
+          <if test="'created_at' == column" >
+            #{record.createdAt,jdbcType=TIMESTAMP},
+          </if>
+          <if test="'updated_at' == column" >
+            #{record.updatedAt,jdbcType=TIMESTAMP},
+          </if>
+        </foreach>
+      </trim>
+    </foreach>
+     on duplicate key update 
+    <trim suffixOverrides="," >
+      <foreach collection="updateColumns" index="index" item="column" >
+        <if test="'id' == column" >
+          `id` = values(id), 
+        </if>
+        <if test="'name' == column" >
+          `name` = values(name), 
+        </if>
+        <if test="'email' == column" >
+          `email` = values(email), 
+        </if>
+        <if test="'phone' == column" >
+          `phone` = values(phone), 
+        </if>
+        <if test="'type' == column" >
+          `type` = values(type), 
+        </if>
+        <if test="'status' == column" >
+          `status` = values(status), 
+        </if>
+        <if test="'created_at' == column" >
+          `created_at` = values(created_at), 
+        </if>
+        <if test="'updated_at' == column" >
+          `updated_at` = values(updated_at), 
+        </if>
+      </foreach>
+    </trim>
+  </insert>
 </mapper>

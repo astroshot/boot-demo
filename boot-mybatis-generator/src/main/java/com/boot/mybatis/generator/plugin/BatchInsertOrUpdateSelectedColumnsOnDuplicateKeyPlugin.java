@@ -29,17 +29,17 @@ public class BatchInsertOrUpdateSelectedColumnsOnDuplicateKeyPlugin extends Enha
 
     @Override
     public boolean clientGenerated(Interface interfaze, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        addInsertOnDuplicateKeyMethod(interfaze, introspectedTable);
+        addBatchInsertOnDuplicateKeyMethod(interfaze, introspectedTable);
         return true;
     }
 
     @Override
     public boolean sqlMapDocumentGenerated(Document document, IntrospectedTable introspectedTable) {
-        addInsertOnDuplicateKeyXml(document, introspectedTable);
+        addBatchInsertOnDuplicateKeyXml(document, introspectedTable);
         return true;
     }
 
-    protected void addInsertOnDuplicateKeyMethod(Interface interfaze, IntrospectedTable introspectedTable) {
+    protected void addBatchInsertOnDuplicateKeyMethod(Interface interfaze, IntrospectedTable introspectedTable) {
         // import necessary classes
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         importedTypes.add(FullyQualifiedJavaType.getNewListInstance());
@@ -59,75 +59,80 @@ public class BatchInsertOrUpdateSelectedColumnsOnDuplicateKeyPlugin extends Enha
         FullyQualifiedJavaType paramListTypeSelective = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
         paramTypeSelective.addTypeArgument(paramListTypeSelective);
         insertOrUpdateOnDuplicateKeyMethod.addParameter(new Parameter(paramTypeSelective, "list", "@Param(\"list\")"));
+
+        FullyQualifiedJavaType insertionColumnType = FullyQualifiedJavaType.getNewListInstance();
+        FullyQualifiedJavaType insertionColumnList = new FullyQualifiedJavaType(FullyQualifiedJavaType.getStringInstance().getFullyQualifiedName());
+        insertionColumnType.addTypeArgument(insertionColumnList);
+
         insertOrUpdateOnDuplicateKeyMethod.addParameter(
-                new Parameter(FullyQualifiedJavaType.getStringInstance(), "columns", "@Param(\"columns\")", true));
+                new Parameter(insertionColumnType, "insertionColumns", "@Param(\"insertionColumns\")"));
+        insertOrUpdateOnDuplicateKeyMethod.addParameter(
+                new Parameter(insertionColumnType, "updatingColumns", "@Param(\"updatingColumns\")"));
         interfaze.addImportedTypes(importedTypes);
         interfaze.addMethod(insertOrUpdateOnDuplicateKeyMethod);
     }
 
-    protected void addInsertOnDuplicateKeyXml(Document document, IntrospectedTable introspectedTable) {
-        XmlElement insertOnDuplicateKey = new XmlElement("insert");
-        insertOnDuplicateKey.addAttribute(new Attribute("id", METHOD_NAME));
-        insertOnDuplicateKey.addAttribute(new Attribute("useGeneratedKeys", "true"));
-        insertOnDuplicateKey.addAttribute(new Attribute("keyProperty", "id"));
-        insertOnDuplicateKey.addAttribute(new Attribute("parameterType", "map"));
+    protected void addBatchInsertOnDuplicateKeyXml(Document document, IntrospectedTable introspectedTable) {
+        XmlElement batchInsertOrUpdateOnDuplicateKey = new XmlElement("insert");
+        batchInsertOrUpdateOnDuplicateKey.addAttribute(new Attribute("id", METHOD_NAME));
+        batchInsertOrUpdateOnDuplicateKey.addAttribute(new Attribute("useGeneratedKeys", "true"));
+        batchInsertOrUpdateOnDuplicateKey.addAttribute(new Attribute("keyProperty", "id"));
+        batchInsertOrUpdateOnDuplicateKey.addAttribute(new Attribute("parameterType", "map"));
 
-        insertOnDuplicateKey.addElement(
+        batchInsertOrUpdateOnDuplicateKey.addElement(
                 new TextElement(
                         "insert into " + introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime()));
 
+        XmlElement foreachInsertionColumn = new XmlElement("foreach");
+        foreachInsertionColumn.addAttribute(new Attribute("collection", "insertionColumns"));
+        foreachInsertionColumn.addAttribute(new Attribute("index", "index"));
+        foreachInsertionColumn.addAttribute(new Attribute("item", "item"));
+        foreachInsertionColumn.addAttribute(new Attribute("separator", ","));
+        foreachInsertionColumn.addAttribute(new Attribute("open", "("));
+        foreachInsertionColumn.addAttribute(new Attribute("close", ")"));
+        foreachInsertionColumn.addElement(new TextElement("${item}"));
+
+        batchInsertOrUpdateOnDuplicateKey.addElement(foreachInsertionColumn);
+
+        batchInsertOrUpdateOnDuplicateKey.addElement(new TextElement(" values"));
         XmlElement valueTrimElement = new XmlElement("trim");
         valueTrimElement.addAttribute(new Attribute("prefix", " ("));
         valueTrimElement.addAttribute(new Attribute("suffix", ")"));
         valueTrimElement.addAttribute(new Attribute("suffixOverrides", ","));
+        XmlElement foreachElement = new XmlElement("foreach");
+        foreachElement.addAttribute(new Attribute("collection", "list"));
+        foreachElement.addAttribute(new Attribute("index", "index"));
+        foreachElement.addAttribute(new Attribute("item", "record"));
+        foreachElement.addAttribute(new Attribute("separator", ","));
+        foreachElement.addElement(valueTrimElement);
 
-        XmlElement columnTrimElement = new XmlElement("trim");
-        columnTrimElement.addAttribute(new Attribute("prefix", "("));
-        columnTrimElement.addAttribute(new Attribute("suffix", ")"));
-        columnTrimElement.addAttribute(new Attribute("suffixOverrides", ","));
-
-        List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
-        for (IntrospectedColumn introspectedColumn : allColumns) {
+        XmlElement foreachColumnForValue = new XmlElement("foreach");
+        foreachColumnForValue.addAttribute(new Attribute("collection", "insertionColumns"));
+        foreachColumnForValue.addAttribute(new Attribute("index", "index"));
+        foreachColumnForValue.addAttribute(new Attribute("item", "column"));
+        List<IntrospectedColumn> columns = introspectedTable.getAllColumns();
+        for (IntrospectedColumn introspectedColumn : columns) {
             String columnName = introspectedColumn.getActualColumnName();
-            if ("id".equals(columnName)) {
-                continue;
-            }
-
-            XmlElement checkColumn = new XmlElement("if");
-            String testCondition = "record." + introspectedColumn.getJavaProperty() + " != null";
-            checkColumn.addAttribute(new Attribute("test", testCondition));
-            checkColumn.addElement(new TextElement("`" + columnName + "`" + ","));
-            columnTrimElement.addElement(checkColumn);
-
-            XmlElement checkColumnValue = new XmlElement("if");
-            checkColumnValue.addAttribute(new Attribute("test", testCondition));
-            checkColumnValue.addElement(
+            XmlElement check = new XmlElement("if");
+            check.addAttribute(new Attribute("test", "'" + columnName + "' == column"));
+            check.addElement(
                     new TextElement("#{record."
                             + introspectedColumn.getJavaProperty()
                             + ",jdbcType="
                             + introspectedColumn.getJdbcTypeName()
                             + "},"));
-            valueTrimElement.addElement(checkColumnValue);
+            foreachColumnForValue.addElement(check);
         }
+        valueTrimElement.addElement(foreachColumnForValue);
+        batchInsertOrUpdateOnDuplicateKey.addElement(foreachElement);
 
-        XmlElement foreachElement = new XmlElement("foreach");
-        foreachElement.addAttribute(new Attribute("collection", "list"));
-        foreachElement.addAttribute(new Attribute("index", "index"));
-        foreachElement.addAttribute(new Attribute("item", "item"));
-        foreachElement.addAttribute(new Attribute("separator", ","));
-
-        insertOnDuplicateKey.addElement(columnTrimElement);
-        insertOnDuplicateKey.addElement(new TextElement(" values"));
-        foreachElement.addElement(valueTrimElement);
-        insertOnDuplicateKey.addElement(foreachElement);
-        insertOnDuplicateKey.addElement(new TextElement(" on duplicate key update "));
-
+        batchInsertOrUpdateOnDuplicateKey.addElement(new TextElement(" on duplicate key update "));
         XmlElement updateColumnTrimElement = new XmlElement("trim");
         updateColumnTrimElement.addAttribute(new Attribute("suffixOverrides", ","));
-        XmlElement foreachColumnForValue = new XmlElement("foreach");
-        foreachColumnForValue.addAttribute(new Attribute("collection", "columns"));
-        foreachColumnForValue.addAttribute(new Attribute("index", "index"));
-        foreachColumnForValue.addAttribute(new Attribute("item", "column"));
+        XmlElement foreachUpdateColumn = new XmlElement("foreach");
+        foreachUpdateColumn.addAttribute(new Attribute("collection", "updatingColumns"));
+        foreachUpdateColumn.addAttribute(new Attribute("index", "index"));
+        foreachUpdateColumn.addAttribute(new Attribute("item", "column"));
         List<IntrospectedColumn> onUpdateColumns = introspectedTable.getAllColumns();
         for (IntrospectedColumn introspectedColumn : onUpdateColumns) {
             String columnName = introspectedColumn.getActualColumnName();
@@ -135,12 +140,12 @@ public class BatchInsertOrUpdateSelectedColumnsOnDuplicateKeyPlugin extends Enha
             check.addAttribute(new Attribute("test", "'" + columnName + "' == column"));
             check.addElement(
                     new TextElement("`" + columnName + "`"
-                            + " = #{record." + introspectedColumn.getJavaProperty() + "}, ")
+                            + " = values(" + columnName + "), ")
             );
-            foreachColumnForValue.addElement(check);
+            foreachUpdateColumn.addElement(check);
         }
-        updateColumnTrimElement.addElement(foreachColumnForValue);
-        insertOnDuplicateKey.addElement(updateColumnTrimElement);
-        document.getRootElement().addElement(insertOnDuplicateKey);
+        updateColumnTrimElement.addElement(foreachUpdateColumn);
+        batchInsertOrUpdateOnDuplicateKey.addElement(updateColumnTrimElement);
+        document.getRootElement().addElement(batchInsertOrUpdateOnDuplicateKey);
     }
 }
