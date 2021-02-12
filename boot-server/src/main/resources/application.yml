@@ -24,10 +24,10 @@ spring:
       charset: UTF-8
       enabled: true
   datasource:
-    name: test
-    url: jdbc:mysql://localhost:3306/test?characterEncoding=utf-8
-    username: root
-    password:
+    name: boot-demo
+    url: jdbc:mysql://localhost:3306/boot-demo?characterEncoding=utf-8
+    username: boot_demo_rw
+    password: 5c9C27omdA!d%^8v
     driver-class-name: com.mysql.jdbc.Driver
   mail:
     from: dev@example.com
