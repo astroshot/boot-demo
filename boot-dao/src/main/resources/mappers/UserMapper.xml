@@ -7,7 +7,8 @@
     <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="TINYINT" />
-    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
     <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
     <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -70,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, `name`, email, phone, `type`, `status`, created_at, updated_at
+    id, `name`, email, phone, `type`, description, `status`, created_at, updated_at
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.boot.dao.model.UserExample" >
     select
@@ -118,11 +119,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into `user` (`name`, email, phone, 
-      `type`, `status`, created_at, 
-      updated_at)
+      `type`, description, `status`, 
+      created_at, updated_at)
     values (#{name,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
-      #{type,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{createdAt,jdbcType=TIMESTAMP}, 
-      #{updatedAt,jdbcType=TIMESTAMP})
+      #{type,jdbcType=TINYINT}, #{description,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.boot.dao.model.User" >
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
@@ -141,6 +142,9 @@
       </if>
       <if test="type != null" >
         `type`,
+      </if>
+      <if test="description != null" >
+        description,
       </if>
       <if test="status != null" >
         `status`,
@@ -165,8 +169,11 @@
       <if test="type != null" >
         #{type,jdbcType=TINYINT},
       </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
       <if test="status != null" >
-        #{status,jdbcType=TINYINT},
+        #{status,jdbcType=INTEGER},
       </if>
       <if test="createdAt != null" >
         #{createdAt,jdbcType=TIMESTAMP},
@@ -200,8 +207,11 @@
       <if test="record.type != null" >
         `type` = #{record.type,jdbcType=TINYINT},
       </if>
+      <if test="record.description != null" >
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
       <if test="record.status != null" >
-        `status` = #{record.status,jdbcType=TINYINT},
+        `status` = #{record.status,jdbcType=INTEGER},
       </if>
       <if test="record.createdAt != null" >
         created_at = #{record.createdAt,jdbcType=TIMESTAMP},
@@ -224,7 +234,8 @@
       email = #{record.email,jdbcType=VARCHAR},
       phone = #{record.phone,jdbcType=VARCHAR},
       `type` = #{record.type,jdbcType=TINYINT},
-      `status` = #{record.status,jdbcType=TINYINT},
+      description = #{record.description,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=INTEGER},
       created_at = #{record.createdAt,jdbcType=TIMESTAMP},
       updated_at = #{record.updatedAt,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -249,8 +260,11 @@
       <if test="type != null" >
         `type` = #{type,jdbcType=TINYINT},
       </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
       <if test="status != null" >
-        `status` = #{status,jdbcType=TINYINT},
+        `status` = #{status,jdbcType=INTEGER},
       </if>
       <if test="createdAt != null" >
         created_at = #{createdAt,jdbcType=TIMESTAMP},
@@ -267,7 +281,8 @@
       email = #{email,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       `type` = #{type,jdbcType=TINYINT},
-      `status` = #{status,jdbcType=TINYINT},
+      description = #{description,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=INTEGER},
       created_at = #{createdAt,jdbcType=TIMESTAMP},
       updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
@@ -280,6 +295,7 @@
       email,
       phone,
       type,
+      description,
       status,
       created_at,
       updated_at,
@@ -292,7 +308,8 @@
         #{item.email,jdbcType=VARCHAR},
         #{item.phone,jdbcType=VARCHAR},
         #{item.type,jdbcType=TINYINT},
-        #{item.status,jdbcType=TINYINT},
+        #{item.description,jdbcType=VARCHAR},
+        #{item.status,jdbcType=INTEGER},
         #{item.createdAt,jdbcType=TIMESTAMP},
         #{item.updatedAt,jdbcType=TIMESTAMP},
       </trim>
@@ -322,8 +339,11 @@
           <if test="'type' == column" >
             #{record.type,jdbcType=TINYINT},
           </if>
+          <if test="'description' == column" >
+            #{record.description,jdbcType=VARCHAR},
+          </if>
           <if test="'status' == column" >
-            #{record.status,jdbcType=TINYINT},
+            #{record.status,jdbcType=INTEGER},
           </if>
           <if test="'created_at' == column" >
             #{record.createdAt,jdbcType=TIMESTAMP},
@@ -342,6 +362,7 @@
       `email`,
       `phone`,
       `type`,
+      `description`,
       `status`,
       `created_at`,
       `updated_at`,
@@ -352,7 +373,8 @@
       #{record.email,jdbcType=VARCHAR},
       #{record.phone,jdbcType=VARCHAR},
       #{record.type,jdbcType=TINYINT},
-      #{record.status,jdbcType=TINYINT},
+      #{record.description,jdbcType=VARCHAR},
+      #{record.status,jdbcType=INTEGER},
       #{record.createdAt,jdbcType=TIMESTAMP},
       #{record.updatedAt,jdbcType=TIMESTAMP},
     </trim>
@@ -373,6 +395,9 @@
         </if>
         <if test="'type' == column" >
           `type` = #{record.type}, 
+        </if>
+        <if test="'description' == column" >
+          `description` = #{record.description}, 
         </if>
         <if test="'status' == column" >
           `status` = #{record.status}, 
@@ -401,6 +426,9 @@
       <if test="record.type != null" >
         `type`,
       </if>
+      <if test="record.description != null" >
+        `description`,
+      </if>
       <if test="record.status != null" >
         `status`,
       </if>
@@ -425,8 +453,11 @@
       <if test="record.type != null" >
         #{record.type,jdbcType=TINYINT},
       </if>
+      <if test="record.description != null" >
+        #{record.description,jdbcType=VARCHAR},
+      </if>
       <if test="record.status != null" >
-        #{record.status,jdbcType=TINYINT},
+        #{record.status,jdbcType=INTEGER},
       </if>
       <if test="record.createdAt != null" >
         #{record.createdAt,jdbcType=TIMESTAMP},
@@ -452,6 +483,9 @@
         </if>
         <if test="'type' == column" >
           `type` = #{record.type}, 
+        </if>
+        <if test="'description' == column" >
+          `description` = #{record.description}, 
         </if>
         <if test="'status' == column" >
           `status` = #{record.status}, 
@@ -489,8 +523,11 @@
           <if test="'type' == column" >
             #{record.type,jdbcType=TINYINT},
           </if>
+          <if test="'description' == column" >
+            #{record.description,jdbcType=VARCHAR},
+          </if>
           <if test="'status' == column" >
-            #{record.status,jdbcType=TINYINT},
+            #{record.status,jdbcType=INTEGER},
           </if>
           <if test="'created_at' == column" >
             #{record.createdAt,jdbcType=TIMESTAMP},
@@ -503,7 +540,7 @@
     </foreach>
      on duplicate key update 
     <trim suffixOverrides="," >
-      <foreach collection="updateColumns" index="index" item="column" >
+      <foreach collection="updatingColumns" index="index" item="column" >
         <if test="'id' == column" >
           `id` = values(id), 
         </if>
@@ -518,6 +555,9 @@
         </if>
         <if test="'type' == column" >
           `type` = values(type), 
+        </if>
+        <if test="'description' == column" >
+          `description` = values(description), 
         </if>
         <if test="'status' == column" >
           `status` = values(status), 

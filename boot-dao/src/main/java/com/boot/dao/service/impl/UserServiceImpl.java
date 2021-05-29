@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,12 +29,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveOrUpdate(User user) {
+        long now = System.currentTimeMillis();
+        Timestamp timestamp = new Timestamp(now);
         if (user.getId() == null) {
-            user.setCreatedAt(new Date());
-            user.setUpdatedAt(new Date());
+            user.setCreatedAt(timestamp);
+            user.setUpdatedAt(timestamp);
             userMapper.insert(user);
         } else {
-            user.setUpdatedAt(new Date());
+            user.setUpdatedAt(timestamp);
             userMapper.updateByPrimaryKeySelective(user);
         }
     }

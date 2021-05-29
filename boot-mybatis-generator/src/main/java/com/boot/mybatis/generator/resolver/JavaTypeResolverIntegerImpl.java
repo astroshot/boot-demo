@@ -4,9 +4,9 @@ import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.JavaTypeResolver;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.config.Context;
-import org.mybatis.generator.internal.types.Jdbc4Types;
 import org.mybatis.generator.internal.util.StringUtility;
 
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.*;
 
@@ -57,17 +57,17 @@ public class JavaTypeResolverIntegerImpl implements JavaTypeResolver {
                 new FullyQualifiedJavaType(Integer.class.getName())));
         typeMap.put(Types.JAVA_OBJECT, new JdbcTypeInformation("JAVA_OBJECT", //$NON-NLS-1$
                 new FullyQualifiedJavaType(Object.class.getName())));
-        typeMap.put(Jdbc4Types.LONGNVARCHAR, new JdbcTypeInformation("LONGNVARCHAR", //$NON-NLS-1$
+        typeMap.put(Types.LONGNVARCHAR, new JdbcTypeInformation("LONGNVARCHAR", //$NON-NLS-1$
                 new FullyQualifiedJavaType(String.class.getName())));
         typeMap.put(Types.LONGVARBINARY, new JdbcTypeInformation("LONGVARBINARY", //$NON-NLS-1$
                 new FullyQualifiedJavaType("byte[]"))); //$NON-NLS-1$
         typeMap.put(Types.LONGVARCHAR, new JdbcTypeInformation("LONGVARCHAR", //$NON-NLS-1$
                 new FullyQualifiedJavaType(String.class.getName())));
-        typeMap.put(Jdbc4Types.NCHAR, new JdbcTypeInformation("NCHAR", //$NON-NLS-1$
+        typeMap.put(Types.NCHAR, new JdbcTypeInformation("NCHAR", //$NON-NLS-1$
                 new FullyQualifiedJavaType(String.class.getName())));
-        typeMap.put(Jdbc4Types.NCLOB, new JdbcTypeInformation("NCLOB", //$NON-NLS-1$
+        typeMap.put(Types.NCLOB, new JdbcTypeInformation("NCLOB", //$NON-NLS-1$
                 new FullyQualifiedJavaType(String.class.getName())));
-        typeMap.put(Jdbc4Types.NVARCHAR, new JdbcTypeInformation("NVARCHAR", //$NON-NLS-1$
+        typeMap.put(Types.NVARCHAR, new JdbcTypeInformation("NVARCHAR", //$NON-NLS-1$
                 new FullyQualifiedJavaType(String.class.getName())));
         typeMap.put(Types.NULL, new JdbcTypeInformation("NULL", //$NON-NLS-1$
                 new FullyQualifiedJavaType(Object.class.getName())));

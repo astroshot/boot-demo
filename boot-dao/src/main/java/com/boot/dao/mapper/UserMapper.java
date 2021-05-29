@@ -28,7 +28,7 @@ public interface UserMapper {
 
     int updateByPrimaryKey(User record);
 
-    public static final String COLUMNS = "id, name, email, phone, type, status, created_at, updated_at";
+    public static final String COLUMNS = "id, name, email, phone, type, description, status, created_at, updated_at";
 
     public static final String TABLE_NAME = "user";
 
@@ -40,5 +40,5 @@ public interface UserMapper {
 
     int insertOrUpdateSelectiveOnDuplicateKey(@Param("record") User record, @Param("columns") String ... columns);
 
-    int batchInsertOrUpdateSelectedColumnsOnDuplicateKey(@Param("list") List<User> list, @Param("insertionColumns") List<String> insertionColumns, @Param("updateColumns") List<String> updateColumns);
+    int batchInsertOrUpdateSelectedColumnsOnDuplicateKey(@Param("list") List<User> list, @Param("insertionColumns") List<String> insertionColumns, @Param("updatingColumns") List<String> updatingColumns);
 }
